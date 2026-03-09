@@ -1,0 +1,855 @@
+# ===== Shared Entities =====
+
+type User {
+  id: ID!
+  swaps: [V3Swap!]! @derivedFrom(field: "user_id")
+  shares: [V3PoolShare!]! @derivedFrom(field: "user_id")
+  addRemoves: [V3AddRemove!]! @derivedFrom(field: "user_id")
+  bufferShares: [V3BufferShare!]! @derivedFrom(field: "user_id")
+  gaugeVotes: [GaugeVote!]! @derivedFrom(field: "user_id")
+  gaugeShares: [GaugeShare!]! @derivedFrom(field: "user_id")
+  votingLocks: [VotingEscrowLock!]! @derivedFrom(field: "user_id")
+  omniVotingLocks: [OmniVotingEscrowLock!]! @derivedFrom(field: "localUser_id")
+}
+
+type Token {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  address: String!
+  latestUSDPrice: BigDecimal
+  latestUSDPriceTimestamp: BigInt
+  latestFXPrice: BigDecimal
+  latestPrice_id: String
+  pool_id: String
+  fxOracleDecimals: Int
+}
+
+# ===== V3 Vault Entities =====
+
+type V3Vault {
+  id: ID!
+  authorizer: String!
+  protocolFeeController: String!
+  isPaused: Boolean!
+  protocolSwapFee: BigDecimal!
+  protocolYieldFee: BigDecimal!
+  pools: [V3Pool!]! @derivedFrom(field: "vault_id")
+}
+
+enum V3PoolType {
+  Weighted
+  Stable
+  QuantAMMWeighted
+  StableSurge
+  Gyro2
+  GyroE
+  LBP
+  FixedLBP
+  ReClamm
+}
+
+type V3Pool {
+  id: ID!
+  vault_id: String! @index
+  hook_id: String!
+  hookConfig_id: String!
+  liquidityManagement_id: String!
+  factory: String!
+  address: String! @index
+  name: String!
+  symbol: String!
+  swapFee: BigDecimal!
+  totalShares: BigDecimal!
+  pauseWindowEndTime: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+  isInitialized: Boolean!
+  isPaused: Boolean!
+  isInRecoveryMode: Boolean!
+  pauseManager: String!
+  swapFeeManager: String!
+  poolCreator: String!
+  protocolSwapFee: BigDecimal!
+  protocolYieldFee: BigDecimal!
+  poolCreatorSwapFee: BigDecimal!
+  poolCreatorYieldFee: BigDecimal!
+  swapsCount: BigInt!
+  holdersCount: BigInt!
+  tokens: [V3PoolToken!]! @derivedFrom(field: "pool_id")
+  rateProviders: [V3RateProvider!]! @derivedFrom(field: "pool_id")
+  snapshots: [V3PoolSnapshot!]! @derivedFrom(field: "pool_id")
+}
+
+type V3Hook {
+  id: ID!
+  address: String!
+  pools: [V3Pool!]! @derivedFrom(field: "hook_id")
+}
+
+type V3HookConfig {
+  id: ID!
+  pool_id: String!
+  hook_id: String!
+  enableHookAdjustedAmounts: Boolean!
+  shouldCallBeforeInitialize: Boolean!
+  shouldCallAfterInitialize: Boolean!
+  shouldCallComputeDynamicSwapFee: Boolean!
+  shouldCallBeforeSwap: Boolean!
+  shouldCallAfterSwap: Boolean!
+  shouldCallBeforeAddLiquidity: Boolean!
+  shouldCallAfterAddLiquidity: Boolean!
+  shouldCallBeforeRemoveLiquidity: Boolean!
+  shouldCallAfterRemoveLiquidity: Boolean!
+}
+
+type V3LiquidityManagement {
+  id: ID!
+  pool_id: String!
+  disableUnbalancedLiquidity: Boolean!
+  enableAddLiquidityCustom: Boolean!
+  enableRemoveLiquidityCustom: Boolean!
+  enableDonation: Boolean!
+}
+
+type V3PoolToken {
+  id: ID!
+  pool_id: String! @index
+  index: Int!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  address: String!
+  balance: BigDecimal!
+  volume: BigDecimal!
+  totalSwapFee: BigDecimal!
+  totalSwapFeeBase: BigDecimal!
+  totalSwapFeeDelta: BigDecimal!
+  totalStaticSwapFee: BigDecimal!
+  totalDynamicSwapFee: BigDecimal!
+  buffer_id: String
+  nestedPool_id: String
+  priceRate: BigDecimal!
+  scalingFactor: BigInt!
+  totalProtocolSwapFee: BigDecimal!
+  totalProtocolYieldFee: BigDecimal!
+  paysYieldFees: Boolean!
+  controllerProtocolFeeBalance: BigDecimal!
+  vaultProtocolSwapFeeBalance: BigDecimal!
+  vaultProtocolYieldFeeBalance: BigDecimal!
+}
+
+type V3RateProvider {
+  id: ID!
+  pool_id: String!
+  token_id: String!
+  address: String!
+}
+
+type V3Buffer {
+  id: ID!
+  wrappedToken_id: String!
+  underlyingToken_id: String!
+  wrappedBalance: BigDecimal!
+  underlyingBalance: BigDecimal!
+  totalShares: BigDecimal!
+}
+
+type V3BufferShare {
+  id: ID!
+  user_id: String!
+  buffer_id: String!
+  balance: BigDecimal!
+}
+
+enum V3InvestType {
+  Add
+  Remove
+}
+
+type V3Swap {
+  id: ID!
+  pool: String! @index
+  tokenIn: String!
+  tokenInSymbol: String!
+  tokenOutSymbol: String!
+  tokenAmountOut: BigDecimal!
+  tokenOut: String!
+  tokenAmountIn: BigDecimal!
+  swapFeeToken: String!
+  swapFeeAmount: BigDecimal!
+  swapFeeBaseAmount: BigDecimal!
+  swapFeeDeltaAmount: BigDecimal!
+  swapFeePercentage: BigDecimal!
+  hasDynamicSwapFee: Boolean!
+  user_id: String! @index
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+  logIndex: BigInt!
+}
+
+type V3AddRemove {
+  id: ID!
+  type: V3InvestType!
+  sender: String!
+  amounts: [BigDecimal!]!
+  pool_id: String! @index
+  user_id: String! @index
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+  logIndex: BigInt!
+}
+
+type V3PoolShare {
+  id: ID!
+  pool_id: String! @index
+  user_id: String! @index
+  balance: BigDecimal!
+}
+
+type V3PoolSnapshot {
+  id: ID!
+  pool_id: String! @index
+  timestamp: Int! @index
+  totalShares: BigDecimal!
+  swapsCount: BigInt!
+  holdersCount: BigInt!
+  balances: [BigDecimal!]!
+  totalSwapFees: [BigDecimal!]!
+  totalStaticSwapFees: [BigDecimal!]!
+  totalDynamicSwapFees: [BigDecimal!]!
+  totalSwapVolumes: [BigDecimal!]!
+  totalProtocolSwapFees: [BigDecimal!]!
+  totalProtocolYieldFees: [BigDecimal!]!
+}
+
+# ===== V3 Pool Type Params =====
+
+type V3Factory {
+  id: ID!
+  address: String!
+  type: V3PoolType!
+  version: Int!
+  pools: [V3PoolTypeInfo!]! @derivedFrom(field: "factory_id")
+}
+
+type V3PoolTypeInfo {
+  id: ID!
+  address: String!
+  factory_id: String! @index
+  weightedParams_id: String
+  stableParams_id: String
+  stableSurgeParams_id: String
+  gyro2Params_id: String
+  gyroEParams_id: String
+  quantAMMWeightedParams_id: String
+  lbpParams_id: String
+  fixedLBPParams_id: String
+  reClammParams_id: String
+}
+
+type V3WeightedParams {
+  id: ID!
+  weights: [BigDecimal!]!
+}
+
+type V3StableParams {
+  id: ID!
+  amp: BigInt!
+}
+
+type V3StableSurgeParams {
+  id: ID!
+  amp: BigInt!
+  maxSurgeFeePercentage: BigDecimal!
+  surgeThresholdPercentage: BigDecimal!
+}
+
+type V3Gyro2Params {
+  id: ID!
+  sqrtAlpha: BigDecimal!
+  sqrtBeta: BigDecimal!
+}
+
+type V3GyroEParams {
+  id: ID!
+  alpha: BigDecimal!
+  beta: BigDecimal!
+  c: BigDecimal!
+  s: BigDecimal!
+  lambda: BigDecimal!
+  tauAlphaX: BigDecimal!
+  tauAlphaY: BigDecimal!
+  tauBetaX: BigDecimal!
+  tauBetaY: BigDecimal!
+  u: BigDecimal!
+  v: BigDecimal!
+  w: BigDecimal!
+  z: BigDecimal!
+  dSq: BigDecimal!
+}
+
+type V3QuantAMMWeightedParams {
+  id: ID!
+  oracleStalenessThreshold: BigInt!
+  poolRegistry: BigInt!
+  lambda: [BigInt!]!
+  epsilonMax: BigInt!
+  absoluteWeightGuardRail: BigInt!
+  maxTradeSizeRatio: BigInt!
+  updateInterval: BigInt!
+  weightsAtLastUpdateInterval: [BigInt!]!
+  weightBlockMultipliers: [BigInt!]!
+  lastUpdateIntervalTime: BigInt!
+  lastInterpolationTimePossible: BigInt!
+  runner: String!
+  rule: String!
+  gradientIntermediates: [BigInt!]!
+  movingAverageIntermediates: [BigInt!]!
+  details: [V3QuantAMMWeightedDetail!]! @derivedFrom(field: "pool_id")
+}
+
+type V3QuantAMMWeightedDetail {
+  id: ID!
+  category: String!
+  name: String!
+  type: String!
+  value: String!
+  pool_id: String! @index
+}
+
+type V3LBPParams {
+  id: ID!
+  owner: String!
+  projectToken: String!
+  reserveToken: String!
+  projectTokenStartWeight: BigInt!
+  reserveTokenStartWeight: BigInt!
+  projectTokenEndWeight: BigInt!
+  reserveTokenEndWeight: BigInt!
+  startTime: BigInt!
+  endTime: BigInt!
+  isProjectTokenSwapInBlocked: Boolean!
+  reserveTokenVirtualBalance: BigInt!
+}
+
+type V3FixedLBPParams {
+  id: ID!
+  owner: String!
+  projectToken: String!
+  reserveToken: String!
+  startTime: BigInt!
+  endTime: BigInt!
+  isProjectTokenSwapInBlocked: Boolean!
+  projectTokenRate: BigInt!
+}
+
+type V3ReClammParams {
+  id: ID!
+  lastTimestamp: BigInt!
+  lastVirtualBalances: [BigInt!]!
+  dailyPriceShiftExponent: BigInt!
+  dailyPriceShiftBase: BigInt!
+  centerednessMargin: BigInt!
+  currentFourthRootPriceRatio: BigInt!
+  startFourthRootPriceRatio: BigInt!
+  endFourthRootPriceRatio: BigInt!
+  priceRatioUpdateStartTime: BigInt!
+  priceRatioUpdateEndTime: BigInt!
+}
+
+# ===== V2 Entities =====
+
+enum V2InvestType {
+  Join
+  Exit
+}
+
+enum V2OperationType {
+  Deposit
+  Withdraw
+  Update
+}
+
+type V2Balancer {
+  id: ID!
+  poolCount: Int!
+  totalLiquidity: BigDecimal!
+  totalSwapCount: BigInt!
+  totalSwapVolume: BigDecimal!
+  totalSwapFee: BigDecimal!
+  totalProtocolFee: BigDecimal
+  protocolFeesCollector: String
+  pools: [V2Pool!]! @derivedFrom(field: "vaultID_id")
+  snapshots: [V2BalancerSnapshot!]! @derivedFrom(field: "vault_id")
+}
+
+type V2Pool {
+  id: ID!
+  address: String!
+  poolType: String
+  poolTypeVersion: Int
+  factory: String
+  strategyType: Int!
+  oracleEnabled: Boolean!
+  symbol: String
+  name: String
+  swapEnabled: Boolean!
+  swapEnabledInternal: Boolean
+  swapEnabledCurationSignal: Boolean
+  swapFee: BigDecimal!
+  owner: String
+  isPaused: Boolean
+  totalWeight: BigDecimal
+  totalSwapVolume: BigDecimal!
+  totalSwapFee: BigDecimal!
+  totalLiquidity: BigDecimal!
+  totalLiquiditySansBPT: BigDecimal
+  totalShares: BigDecimal!
+  totalProtocolFee: BigDecimal
+  createTime: Int!
+  swapsCount: BigInt!
+  holdersCount: BigInt!
+  vaultID_id: String! @index
+  tx: String
+  tokensList: [String!]!
+  tokens: [V2PoolToken!]! @derivedFrom(field: "pool_id")
+  joinsExits: [V2JoinExit!]! @derivedFrom(field: "pool_id")
+  swaps: [V2Swap!]! @derivedFrom(field: "pool_id")
+  shares: [V2PoolShare!]! @derivedFrom(field: "pool_id")
+  snapshots: [V2PoolSnapshot!]! @derivedFrom(field: "pool_id")
+  historicalValues: [V2PoolHistoricalLiquidity!]! @derivedFrom(field: "pool_id")
+  weightUpdates: [V2GradualWeightUpdate!]! @derivedFrom(field: "pool_id")
+  amp: BigInt
+  latestAmpUpdate_id: String
+  ampUpdates: [V2AmpUpdate!]! @derivedFrom(field: "pool_id")
+  priceRateProviders: [V2PriceRateProvider!]! @derivedFrom(field: "pool_id")
+  principalToken: String
+  baseToken: String
+  expiryTime: BigInt
+  unitSeconds: BigInt
+  managementFee: BigDecimal
+  joinExitEnabled: Boolean
+  mustAllowlistLPs: Boolean
+  managementAumFee: BigDecimal
+  totalAumFeeCollectedInBPT: BigDecimal
+  circuitBreakers: [V2CircuitBreaker!]! @derivedFrom(field: "pool_id")
+  mainIndex: Int
+  wrappedIndex: Int
+  lowerTarget: BigDecimal
+  upperTarget: BigDecimal
+  sqrtAlpha: BigDecimal
+  sqrtBeta: BigDecimal
+  root3Alpha: BigDecimal
+  c: BigDecimal
+  s: BigDecimal
+  tauAlphaX: BigDecimal
+  tauAlphaY: BigDecimal
+  tauBetaX: BigDecimal
+  tauBetaY: BigDecimal
+  u: BigDecimal
+  v: BigDecimal
+  w: BigDecimal
+  z: BigDecimal
+  dSq: BigDecimal
+  alpha: BigDecimal
+  beta: BigDecimal
+  lambda: BigDecimal
+  delta: BigDecimal
+  epsilon: BigDecimal
+  isInRecoveryMode: Boolean
+  protocolSwapFeeCache: BigDecimal
+  protocolYieldFeeCache: BigDecimal
+  protocolAumFeeCache: BigDecimal
+  totalProtocolFeePaidInBPT: BigDecimal
+  lastJoinExitAmp: BigInt
+  lastPostJoinExitInvariant: BigDecimal
+  protocolId: Int
+  protocolIdData_id: String
+}
+
+type V2PoolContract {
+  id: ID!
+  pool_id: String! @index
+}
+
+type V2PoolToken {
+  id: ID!
+  pool_id: String @index
+  token_id: String @index
+  assetManager: String!
+  symbol: String!
+  name: String!
+  decimals: Int!
+  index: Int
+  address: String!
+  oldPriceRate: BigDecimal
+  priceRate: BigDecimal!
+  balance: BigDecimal!
+  paidProtocolFees: BigDecimal
+  cashBalance: BigDecimal!
+  managedBalance: BigDecimal!
+  managements: [V2ManagementOperation!]! @derivedFrom(field: "poolToken_id")
+  weight: BigDecimal
+  isExemptFromYieldProtocolFee: Boolean
+  circuitBreaker_id: String
+}
+
+type V2PriceRateProvider {
+  id: ID!
+  pool_id: String! @index
+  token_id: String! @index
+  address: String!
+  rate: BigDecimal
+  lastCached: Int
+  cacheDuration: Int
+  cacheExpiry: Int
+}
+
+type V2CircuitBreaker {
+  id: ID!
+  pool_id: String! @index
+  token_id: String! @index
+  bptPrice: BigDecimal!
+  lowerBoundPercentage: BigDecimal!
+  upperBoundPercentage: BigDecimal!
+}
+
+type V2PoolShare {
+  id: ID!
+  user_id: String! @index
+  pool_id: String! @index
+  balance: BigDecimal!
+}
+
+type V2UserInternalBalance {
+  id: ID!
+  user_id: String @index
+  token: String!
+  tokenInfo_id: String @index
+  balance: BigDecimal!
+}
+
+type V2GradualWeightUpdate {
+  id: ID!
+  pool_id: String! @index
+  scheduledTimestamp: Int!
+  startTimestamp: BigInt!
+  endTimestamp: BigInt!
+  startWeights: [BigInt!]!
+  endWeights: [BigInt!]!
+}
+
+type V2AmpUpdate {
+  id: ID!
+  pool_id: String! @index
+  scheduledTimestamp: Int!
+  startTimestamp: BigInt!
+  endTimestamp: BigInt!
+  startAmp: BigInt!
+  endAmp: BigInt!
+}
+
+type V2SwapFeeUpdate {
+  id: ID!
+  pool_id: String! @index
+  scheduledTimestamp: Int!
+  startTimestamp: BigInt!
+  endTimestamp: BigInt!
+  startSwapFeePercentage: BigDecimal!
+  endSwapFeePercentage: BigDecimal!
+}
+
+type V2Swap {
+  id: ID!
+  caller: String!
+  tokenIn: String!
+  tokenInSym: String!
+  tokenOut: String!
+  tokenOutSym: String!
+  tokenAmountIn: BigDecimal!
+  tokenAmountOut: BigDecimal!
+  valueUSD: BigDecimal!
+  pool_id: String! @index
+  user_id: String! @index
+  timestamp: Int! @index
+  block: BigInt
+  tx: String!
+}
+
+type V2JoinExit {
+  id: ID!
+  type: V2InvestType!
+  sender: String!
+  amounts: [BigDecimal!]!
+  valueUSD: BigDecimal
+  pool_id: String! @index
+  user_id: String! @index
+  timestamp: Int! @index
+  tx: String!
+  block: BigInt
+}
+
+type V2LatestPrice {
+  id: ID!
+  asset: String! @index
+  pricingAsset: String! @index
+  pool_id: String! @index
+  price: BigDecimal!
+  block: BigInt!
+}
+
+type V2PoolHistoricalLiquidity {
+  id: ID!
+  pool_id: String! @index
+  poolTotalShares: BigDecimal!
+  poolLiquidity: BigDecimal!
+  poolShareValue: BigDecimal!
+  pricingAsset: String!
+  block: BigInt!
+}
+
+type V2TokenPrice {
+  id: ID!
+  pool_id: String! @index
+  asset: String!
+  amount: BigDecimal!
+  pricingAsset: String!
+  price: BigDecimal!
+  block: BigInt!
+  timestamp: Int! @index
+}
+
+type V2ManagementOperation {
+  id: ID!
+  type: V2OperationType!
+  cashDelta: BigDecimal!
+  managedDelta: BigDecimal!
+  poolToken_id: String! @index
+  timestamp: Int! @index
+}
+
+type V2PoolSnapshot {
+  id: ID!
+  pool_id: String! @index
+  amounts: [BigDecimal!]!
+  totalShares: BigDecimal!
+  swapVolume: BigDecimal!
+  protocolFee: BigDecimal
+  swapFees: BigDecimal!
+  liquidity: BigDecimal!
+  swapsCount: BigInt!
+  holdersCount: BigInt!
+  timestamp: Int! @index
+}
+
+type V2TokenSnapshot {
+  id: ID!
+  token_id: String! @index
+  timestamp: Int! @index
+  totalBalanceUSD: BigDecimal!
+  totalBalanceNotional: BigDecimal!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeNotional: BigDecimal!
+  totalSwapCount: BigInt!
+}
+
+type V2TradePair {
+  id: ID!
+  token0_id: String! @index
+  token1_id: String! @index
+  totalSwapVolume: BigDecimal!
+  totalSwapFee: BigDecimal!
+}
+
+type V2TradePairSnapshot {
+  id: ID!
+  pair_id: String! @index
+  timestamp: Int! @index
+  totalSwapVolume: BigDecimal!
+  totalSwapFee: BigDecimal!
+}
+
+type V2BalancerSnapshot {
+  id: ID!
+  vault_id: String! @index
+  timestamp: Int! @index
+  poolCount: Int!
+  totalLiquidity: BigDecimal!
+  totalSwapCount: BigInt!
+  totalSwapVolume: BigDecimal!
+  totalSwapFee: BigDecimal!
+  totalProtocolFee: BigDecimal
+}
+
+type V2ProtocolIdData {
+  id: ID!
+  name: String!
+}
+
+type V2FXOracle {
+  id: ID!
+  tokens: [String!]!
+  divisor: String
+  decimals: Int
+}
+
+type V2TokenData {
+  id: ID!
+  token_id: String! @index
+  totalBalanceUSD: BigDecimal!
+  totalBalanceNotional: BigDecimal!
+  totalVolumeUSD: BigDecimal!
+  totalVolumeNotional: BigDecimal!
+  totalSwapCount: BigInt!
+}
+
+# ===== Gauge Entities =====
+
+enum GaugeChain {
+  Arbitrum
+  Gnosis
+  Polygon
+  Optimism
+  Avalanche
+  PolygonZkEvm
+  Base
+  Fraxtal
+}
+
+type VotingEscrow {
+  id: ID!
+  stakedSupply: BigDecimal
+  locks: [VotingEscrowLock!]! @derivedFrom(field: "votingEscrowID_id")
+  omniLocks: [OmniVotingEscrowLock!]! @derivedFrom(field: "votingEscrowID_id")
+}
+
+type OmniVotingEscrowLock {
+  id: ID!
+  localUser_id: String! @index
+  remoteUser: String!
+  dstChainId: Int!
+  bias: BigDecimal!
+  slope: BigDecimal!
+  timestamp: Int! @index
+  votingEscrowID_id: String! @index
+}
+
+type VotingEscrowLock {
+  id: ID!
+  user_id: String! @index
+  bias: BigDecimal!
+  slope: BigDecimal!
+  timestamp: Int! @index
+  unlockTime: BigInt!
+  lockedBalance: BigDecimal!
+  votingEscrowID_id: String! @index
+  updatedAt: Int!
+}
+
+type LockSnapshot {
+  id: ID!
+  user_id: String! @index
+  bias: BigDecimal!
+  slope: BigDecimal!
+  timestamp: Int! @index
+}
+
+type GaugeFactory {
+  id: ID!
+  numGauges: Int!
+  gauges: [LiquidityGauge!]! @derivedFrom(field: "factory_id")
+}
+
+type LiquidityGauge {
+  id: ID!
+  symbol: String!
+  gauge_id: String
+  pool_id: String @index
+  poolAddress: String!
+  poolId: String
+  isKilled: Boolean!
+  isPreferentialGauge: Boolean!
+  relativeWeightCap: BigDecimal
+  streamer: String
+  factory_id: String! @index
+  totalSupply: BigDecimal!
+  rewardTokensList: [String!]
+  shares: [GaugeShare!]! @derivedFrom(field: "gauge_id")
+  tokens: [RewardToken!]! @derivedFrom(field: "gauge_id")
+}
+
+type RootGauge {
+  id: ID!
+  chain: GaugeChain!
+  recipient: String!
+  gauge_id: String
+  isKilled: Boolean!
+  relativeWeightCap: BigDecimal
+  factory_id: String! @index
+}
+
+type SingleRecipientGauge {
+  id: ID!
+  recipient: String!
+  gauge_id: String
+  isKilled: Boolean!
+  relativeWeightCap: BigDecimal
+  factory_id: String! @index
+}
+
+type Gauge {
+  id: ID!
+  address: String!
+  type_id: String! @index
+  addedTimestamp: Int!
+  liquidityGauge_id: String
+  rootGauge_id: String
+}
+
+type GaugePool {
+  id: ID!
+  poolId: String
+  address: String!
+  preferentialGauge_id: String
+  gaugesList: [String!]!
+  gauges: [LiquidityGauge!]! @derivedFrom(field: "pool_id")
+}
+
+type RewardToken {
+  id: ID!
+  symbol: String!
+  decimals: Int!
+  gauge_id: String! @index
+  rate: BigDecimal
+  periodFinish: BigInt
+  totalDeposited: BigDecimal!
+}
+
+type GaugeShare {
+  id: ID!
+  user_id: String! @index
+  gauge_id: String! @index
+  balance: BigDecimal!
+}
+
+type GaugeType {
+  id: ID!
+  name: String!
+}
+
+type GaugeVote {
+  id: ID!
+  user_id: String! @index
+  gauge_id: String! @index
+  weight: BigDecimal
+  timestamp: BigInt
+}
+
+type GaugeInjector {
+  id: ID!
+}

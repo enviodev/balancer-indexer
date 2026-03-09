@@ -1,0 +1,1102 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: balancer-indexer
+description: Balancer Protocol Unified Indexer
+
+field_selection:
+  transaction_fields:
+    - hash
+    - from
+
+contracts:
+  # ===== V3 Vault =====
+  - name: V3Vault
+    events:
+      - event: "PoolRegistered(address indexed pool, address indexed factory, (address,uint8,address,bool)[] tokenConfig, uint256 pauseWindowEndTime, address indexed roleAccount, (address,bool,bool,bool,bool,bool,bool,bool,bool,bool) hooksConfig, (bool,bool,bool,bool) liquidityManagement, (address,address,address) roleAccounts)"
+      - event: "Swap(address indexed pool, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut, uint256 swapFeePercentage, uint256 swapFeeAmount)"
+      - event: "LiquidityAdded(address indexed pool, address indexed liquidityProvider, int256[] deltas, uint256[] amountsAddedRaw, uint256[] swapFeeAmountsRaw)"
+      - event: "LiquidityRemoved(address indexed pool, address indexed liquidityProvider, int256[] deltas, uint256[] amountsRemovedRaw, uint256[] swapFeeAmountsRaw)"
+      - event: "LiquidityAddedToBuffer(address indexed wrappedToken, uint256 amountUnderlying, uint256 amountWrapped)"
+      - event: "LiquidityRemovedFromBuffer(address indexed wrappedToken, uint256 amountUnderlying, uint256 amountWrapped)"
+      - event: "BufferSharesMinted(address indexed wrappedToken, address indexed to, uint256 issuedShares)"
+      - event: "BufferSharesBurned(address indexed wrappedToken, address indexed from, uint256 burnedShares)"
+      - event: "Wrap(address indexed wrappedToken, uint256 burnedShares, uint256 mintedShares, bytes32 bufferBalances)"
+      - event: "Unwrap(address indexed wrappedToken, uint256 burnedShares, uint256 mintedShares, bytes32 bufferBalances)"
+      - event: "SwapFeePercentageChanged(address indexed pool, uint256 swapFeePercentage)"
+      - event: "PoolRecoveryModeStateChanged(address indexed pool, bool recoveryMode)"
+      - event: "PoolPausedStateChanged(address indexed pool, bool paused)"
+      - event: "ProtocolFeeControllerChanged(address indexed newProtocolFeeController)"
+
+  # ===== V3 Protocol Fee Controller =====
+  - name: V3ProtocolFeeController
+    events:
+      - event: "GlobalProtocolSwapFeePercentageChanged(uint256 swapFeePercentage)"
+      - event: "GlobalProtocolYieldFeePercentageChanged(uint256 yieldFeePercentage)"
+      - event: "PoolCreatorSwapFeePercentageChanged(address indexed pool, uint256 poolCreatorSwapFeePercentage)"
+      - event: "PoolCreatorYieldFeePercentageChanged(address indexed pool, uint256 poolCreatorYieldFeePercentage)"
+      - event: "ProtocolSwapFeePercentageChanged(address indexed pool, uint256 swapFeePercentage)"
+      - event: "ProtocolYieldFeePercentageChanged(address indexed pool, uint256 yieldFeePercentage)"
+      - event: "ProtocolSwapFeeCollected(address indexed pool, address indexed token, uint256 amount)"
+      - event: "ProtocolYieldFeeCollected(address indexed pool, address indexed token, uint256 amount)"
+      - event: "ProtocolFeesWithdrawn(address indexed pool, address indexed token, uint256 amount)"
+
+  # ===== V3 BPT (dynamic — registered on PoolRegistered) =====
+  - name: V3BPT
+    events:
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+
+  # ===== V3 Factory Contracts =====
+  - name: V3WeightedPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3WeightedPoolV2Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3StablePoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3StablePoolV2Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3StablePoolV3Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3Gyro2CLPPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3GyroECLPPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3QuantAMMWeightedPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3LBPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3LBPoolV2Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3LBPoolV3Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3FixedPriceLBPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3ReClammPoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+  - name: V3ReClammPoolV2Factory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+
+  # ===== V3 Hooks (fixed addresses) =====
+  - name: V3StableSurgeHook
+    events:
+      - event: "StableSurgeHookRegistered(address indexed pool, address indexed factory)"
+  - name: V3StableSurgeHookV2
+    events:
+      - event: "StableSurgeHookRegistered(address indexed pool, address indexed factory)"
+
+  # ===== V3 ReClamm Pool (dynamic) =====
+  - name: V3ReClammPool
+    events:
+      - event: "CenterednessMarginUpdated(uint256 centerednessMargin)"
+      - event: "LastTimestampUpdated(uint32 lastTimestamp)"
+      - event: "VirtualBalancesUpdated(uint256 virtualBalanceA, uint256 virtualBalanceB)"
+      - event: "DailyPriceShiftExponentUpdated(uint256 dailyPriceShiftExponent, uint256 dailyPriceShiftBase)"
+      - event: "PriceRatioStateUpdated(uint256 priceRatioUpdateStartTime, uint256 priceRatioUpdateEndTime, uint256 startFourthRootPriceRatio, uint256 endFourthRootPriceRatio)"
+
+  # ===== V2 Vault =====
+  - name: V2Vault
+    events:
+      - event: "Swap(bytes32 indexed poolId, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut)"
+      - event: "PoolBalanceChanged(bytes32 indexed poolId, address indexed liquidityProvider, address[] tokens, int256[] deltas, uint256[] protocolFeeAmounts)"
+      - event: "PoolBalanceManaged(bytes32 indexed poolId, address indexed assetManager, address indexed token, int256 cashDelta, int256 managedDelta)"
+      - event: "InternalBalanceChanged(address indexed user, address indexed token, int256 delta)"
+
+  # ===== V2 Event Emitter =====
+  - name: V2EventEmitter
+    events:
+      - event: "LogArgument(address indexed pool, bytes32 indexed topic, bytes data, uint256 logIndex)"
+
+  # ===== V2 Pool Factory (covers all regular factories) =====
+  - name: V2PoolFactory
+    events:
+      - event: "PoolCreated(address indexed pool)"
+
+  # ===== V2 Pool (dynamic — registered on PoolCreated) =====
+  - name: V2Pool
+    events:
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+      - event: "SwapFeePercentageChanged(uint256 swapFeePercentage)"
+      - event: "PausedStateChanged(bool paused)"
+      - event: "RecoveryModeStateChanged(bool enabled)"
+      - event: "ProtocolFeePercentageCacheUpdated(uint256 indexed feeType, uint256 protocolSwapFeePercentage)"
+      - event: "AmpUpdateStarted(uint256 startValue, uint256 endValue, uint256 startTime, uint256 endTime)"
+      - event: "AmpUpdateStopped(uint256 currentValue)"
+      - event: "SwapEnabledSet(bool swapEnabled)"
+      - event: "GradualWeightUpdateScheduled(uint256 startTime, uint256 endTime, uint256[] startWeights, uint256[] endWeights)"
+      - event: "OracleEnabledChanged(bool enabled)"
+      - event: "TargetsSet(address indexed token, uint256 lowerTarget, uint256 upperTarget)"
+      - event: "PausedLocally()"
+      - event: "UnpausedLocally()"
+
+  # ===== V2 Protocol ID Registry =====
+  - name: V2ProtocolIdRegistry
+    events:
+      - event: "ProtocolIdRegistered(uint256 indexed protocolId, string name)"
+      - event: "ProtocolIdRenamed(uint256 indexed protocolId, string name)"
+
+  # ===== Gauge Contracts =====
+
+  # GaugeController — mainnet + sepolia only
+  - name: GaugeController
+    events:
+      - event: "AddType(string name, int128 type_id)"
+      - event: "NewGauge(address addr, int128 gauge_type, uint256 weight)"
+      - event: "VoteForGauge(uint256 time, address user, address gauge_addr, uint256 weight)"
+
+  # VotingEscrow — mainnet + sepolia only
+  - name: VotingEscrowContract
+    events:
+      - event: "Deposit(address indexed provider, uint256 value, uint256 indexed locktime, int128 depositType, uint256 ts)"
+      - event: "Withdraw(address indexed provider, uint256 value, uint256 ts)"
+      - event: "Supply(uint256 prevSupply, uint256 supply)"
+
+  # OmniVotingEscrow — mainnet only (bridges veBAL to L2s)
+  - name: OmniVotingEscrow
+    events:
+      - event: "UserBalToChain(uint16 dstChainId, address localUser, address remoteUser, (int128,int128,uint256,uint256) localUserPoint, (int128,int128,uint256,uint256) newUserPoint)"
+
+  # OmniVotingEscrowChild — child chains (receives bridged veBAL)
+  - name: OmniVotingEscrowChild
+    events:
+      - event: "UserBalFromChain(uint16 srcChainId, address user, (int128,int128,uint256,uint256) oldUserPoint, (int128,int128,uint256,uint256) userPoint)"
+
+  # AuthorizerAdaptorEntrypoint — all chains (reward token management)
+  - name: GaugeAuthorizerAdaptor
+    events:
+      - event: "ActionPerformed(bytes4 indexed selector, address indexed target, address indexed caller, bytes data)"
+
+  # Mainnet liquidity gauge factory V1 — GaugeCreated with 2 params
+  - name: GaugeLiquidityV1Factory
+    events:
+      - event: "GaugeCreated(address indexed gauge, address indexed pool)"
+
+  # Mainnet liquidity gauge factory V2+ — GaugeCreated with 1 param
+  - name: GaugeLiquidityV2Factory
+    events:
+      - event: "GaugeCreated(address indexed gauge)"
+        name: LiquidityGaugeV2Created
+
+  # Child chain gauge V1 factory — RewardsOnlyGauge
+  - name: ChildChainGaugeV1Factory
+    events:
+      - event: "RewardsOnlyGaugeCreated(address indexed gauge, address indexed pool, address streamer)"
+
+  # Child chain gauge V2+ factory
+  - name: ChildChainGaugeV2Factory
+    events:
+      - event: "GaugeCreated(address indexed gauge)"
+        name: ChildChainGaugeV2Created
+
+  # SingleRecipientGauge factory V1
+  - name: SingleRecipientGaugeV1Factory
+    events:
+      - event: "SingleRecipientGaugeCreated(address indexed gauge, address indexed recipient)"
+
+  # SingleRecipientGauge factory V2
+  - name: SingleRecipientGaugeV2Factory
+    events:
+      - event: "GaugeCreated(address indexed gauge)"
+        name: SingleRecipientGaugeV2Created
+
+  # Root gauge V1 factories (mainnet only, per-chain events)
+  - name: ArbitrumRootGaugeV1Factory
+    events:
+      - event: "ArbitrumRootGaugeCreated(address indexed gauge, address indexed recipient)"
+
+  - name: PolygonRootGaugeV1Factory
+    events:
+      - event: "PolygonRootGaugeCreated(address indexed gauge, address indexed recipient)"
+
+  - name: OptimismRootGaugeV1Factory
+    events:
+      - event: "OptimismRootGaugeCreated(address indexed gauge, address indexed recipient)"
+
+  # Root gauge V2 factory (mainnet only, all chains share same event)
+  - name: RootGaugeV2Factory
+    events:
+      - event: "GaugeCreated(address indexed gauge)"
+        name: RootGaugeV2Created
+
+  # Dynamic gauge contracts (no address — registered by factories)
+  - name: GaugeLiquidityGauge
+    events:
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        name: GaugeLiquidityGaugeTransfer
+      - event: "RelativeWeightCapChanged(uint256 new_relative_weight_cap)"
+
+  - name: GaugeRewardsOnlyGauge
+    events:
+      - event: "Transfer(address indexed from, address indexed to, uint256 value)"
+        name: GaugeRewardsOnlyTransfer
+
+  - name: GaugeChildChainStreamer
+    events:
+      - event: "RewardDurationUpdated(address indexed reward_token, uint256 duration)"
+
+  - name: GaugeRootGauge
+    events:
+      - event: "RelativeWeightCapChanged(uint256 new_relative_weight_cap)"
+        name: RootGaugeRelativeWeightCapChanged
+
+  - name: GaugeSingleRecipientGauge
+    events:
+      - event: "RelativeWeightCapChanged(uint256 new_relative_weight_cap)"
+        name: SingleRecipientRelativeWeightCapChanged
+
+  - name: GaugeInjectorContract
+    events:
+      - event: "EmissionsInjection(address gauge, address token, uint256 amount)"
+
+chains:
+  # ===== Ethereum Mainnet =====
+  - id: 1
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 21332121
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 21332121
+      - name: V3BPT
+        # Dynamic — registered on PoolRegistered
+      - name: V3ReClammPool
+        # Dynamic — registered on ReClamm PoolCreated
+      - name: V3WeightedPoolFactory
+        address: "0x201efd508c8DfE9DE1a13c2452863A78CB2a86Cc"
+        start_block: 21336937
+      - name: V3WeightedPoolV2Factory
+        address: "0x332694Ef46D880DF6Ea9593e04CB8ABEE5F81D99"
+        start_block: 24249675
+      - name: V3StablePoolFactory
+        address: "0xB9d01CA61b9C181dA1051bFDd28e1097e920AB14"
+        start_block: 21337005
+      - name: V3StablePoolV2Factory
+        address: "0xe42C2E153BB0A8899b59C73F5Ff941f9742F1197"
+        start_block: 22089887
+      - name: V3StablePoolV3Factory
+        address: "0x4eFcd8bcE8AC9b94bd76648e2c85bEf6c40F3228"
+        start_block: 24249915
+      - name: V3Gyro2CLPPoolFactory
+        address: "0xb96524227c4B5Ab908FC3d42005FE3B07abA40E9"
+        start_block: 22188963
+      - name: V3GyroECLPPoolFactory
+        address: "0xE9B0a3bc48178D7FE2F5453C8bc1415d73F966d0"
+        start_block: 22046343
+      - name: V3QuantAMMWeightedPoolFactory
+        address: "0xD5c43063563f9448cE822789651662cA7DcD5773"
+        start_block: 22334706
+      - name: V3LBPoolFactory
+        address: "0x4eff2d77D9fFbAeFB4b141A3e494c085b3FF4Cb5"
+        start_block: 21974368
+      - name: V3LBPoolV2Factory
+        address: "0x02916d8F0891309806FCb347Bf4191692cbDDcAF"
+        start_block: 22871105
+      - name: V3LBPoolV3Factory
+        address: "0xD5584b37D1845fFeD958C2d94bC675603DdCce68"
+        start_block: 24049130
+      - name: V3FixedPriceLBPoolFactory
+        address: "0xeb1AA94421aEcFB1dc17dDB1068E4609c4bE8758"
+        start_block: 24076153
+      - name: V3ReClammPoolFactory
+        address: "0x5939ab16fDf1991B0EF603c639B6b501A7841fAB"
+        start_block: 22676210
+      - name: V3ReClammPoolV2Factory
+        address: "0xDaa273AeEc06e9CCb7428a77E2abb1E4659B16D2"
+        start_block: 22832233
+      - name: V3StableSurgeHook
+        address: "0xb18fA0cb5DE8cecB8899AAE6e38b1B7ed77885dA"
+        start_block: 21791079
+      - name: V3StableSurgeHookV2
+        address: "0xBDbADc891BB95DEE80eBC491699228EF0f7D6fF1"
+        start_block: 22195509
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 12272146
+      - name: V2EventEmitter
+        address: "0x1ACfEEA57d2ac674d7E65964f155AB9348A6C290"
+        start_block: 16419620
+      - name: V2PoolFactory
+        address:
+          - "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9"
+          - "0xcC508a455F5b0073973107Db6a878DdBDab957bC"
+          - "0x5Dd94Da3644DDD055fcf6B3E1aa310Bb7801EB8b"
+          - "0x897888115Ada5773E02aA29F775430BFB5F34c51"
+          - "0xA5bf2ddF098bb0Ef6d120C98217dD6B141c74EE0"
+          - "0xc66Ba2B6595D3613CCab350C886aCE23866EDe24"
+          - "0x8df6EfEc5547e31B0eb7d1291B511FF8a2bf987c"
+          - "0xf9ac7B9dF2b3454E841110CcE5550bD5AC6f875F"
+          - "0x85a80afee867aDf27B50BdB7b76DA70f1E853062"
+          - "0xdba127fBc23fb20F5929C546af220A991b5C6e01"
+          - "0xfADa0f4547AB2de89D1304A668C39B3E09Aa7c76"
+          - "0xDB8d758BCb971e482B2C45f7F8a7740283A1bd3A"
+          - "0x5B42eC6D40f7B7965BE5308c70e2603c0281C1E9"
+          - "0xBa1b4a90bAD57470a2cbA762A32955dC491f76e0"
+          - "0x67d27634E44793fE63c467035E31ea8635117cd4"
+          - "0x751A0bC0e3f75b38e01Cf25bFCE7fF36DE1C87DE"
+          - "0x0F3e0c4218b7b0108a3643cFe9D3ec0d4F57c54e"
+          - "0x48767F9F868a4A7b86A90736632F6E44C2df7fa9"
+          - "0xBF904F9F340745B4f0c4702c7B6Ab1e808eA6b93"
+          - "0xb7561f547F3207eDb42A6AfA42170Cd47ADD17BD"
+          - "0xb08E16cFc07C684dAA2f93C70323BAdb2A6CBFd2"
+          - "0xD7FAD3bd59D6477cbe1BE7f646F7f1BA25b230f8"
+          - "0x6A0AC04f5C2A10297D5FA79FA6358837a8770041"
+          - "0x7d833FEF5BB92ddb578DA85fc0c35cD5Cc00Fb3e"
+          - "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
+          - "0x0b576c1245F479506e7C8bbc4dB4db07C1CD31F9"
+          - "0xE061bF85648e9FA7b59394668CfEef980aEc4c66"
+          - "0x5F43FBa61f63Fa6bFF101a0A0458cEA917f6B347"
+          - "0x67A25ca2350Ebf4a0C475cA74C257C94a373b828"
+          - "0x813EE7a840CE909E7Fea2117A44a90b8063bd4fd"
+          - "0x2EbE41E1aa44D61c206A94474932dADC7D3FD9E3"
+          - "0x39A79EB449Fc05C92c39aA6f0e9BfaC03BE8dE5B"
+          - "0xfd1c0e6f02f71842b6ffF7CdC7a017eE1Fd3CdAC"
+          - "0x4E11AEec21baF1660b1a46472963cB3DA7811C89"
+          - "0x8b7854708c0C54f9D7d1FF351D4F84E6dE0E134C"
+          - "0x5F5222Ffa40F2AEd6380D022184D6ea67C776eE0"
+          - "0x412a5B2e7a678471985542757A6855847D4931D5"
+          - "0x579653927BF509B361F6e3813f5D4B95331d98c9"
+        start_block: 12272146
+      - name: V2Pool
+      - name: V2ProtocolIdRegistry
+        address: "0xc3ccacE87f6d3A81724075ADcb5ddd85a8A1bB68"
+        start_block: 16719996
+      # Gauge contracts
+      - name: GaugeController
+        address: "0xC128468b7Ce63eA702C1f104D55A2566b13D3ABD"
+        start_block: 14457014
+      - name: VotingEscrowContract
+        address: "0xC128a9954e6c874eA3d62ce62B468bA073093F25"
+        start_block: 14457013
+      - name: OmniVotingEscrow
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 17331264
+      - name: GaugeAuthorizerAdaptor
+        address: "0xf5dECDB1f3d1ee384908Fbe16D2F0348AE43a9eA"
+        start_block: 16042168
+      - name: GaugeLiquidityV1Factory
+        address: "0x4E7bBd911cf1EFa442BC1b2e9Ea01ffE785412EC"
+        start_block: 14457664
+      - name: GaugeLiquidityV2Factory
+        address: "0xf1665E19bc105BE4EDD3739F88315cC699cc5b65"
+        start_block: 15399251
+      - name: SingleRecipientGaugeV1Factory
+        address: "0x94f68b54191F62f781Fe8298A8A5Fa3ed772d227"
+        start_block: 14457748
+      - name: SingleRecipientGaugeV2Factory
+        address: "0x4fb47126Fa83A8734991E41B942Ac29A3266C968"
+        start_block: 16686720
+      - name: ArbitrumRootGaugeV1Factory
+        address: "0xad901309d9e9DbC5Df19c84f729f429F0189a633"
+        start_block: 14580456
+      - name: PolygonRootGaugeV1Factory
+        address: "0x4C4287b07d293E361281bCeEe8715c8CDeB64E34"
+        start_block: 14577894
+      - name: OptimismRootGaugeV1Factory
+        address: "0x3083A1C455ff38d39e58Dbac5040f465cF73C5c8"
+        start_block: 15141554
+      - name: RootGaugeV2Factory
+        address:
+          - "0x1c99324EDC771c82A0DCCB780CC7DDA0045E50e7"
+          - "0xa98Bce70c92aD2ef3288dbcd659bC0d6b62f8F13"
+          - "0x866D4B65694c66fbFD15Dd6fa933D0A6b3940A36"
+          - "0x2a18B396829bc29F66a1E59fAdd7a0269A6605E8"
+          - "0x22625eEDd92c81a219A83e1dc48f88d54786B017"
+          - "0x8e3B64b3737097F283E965869e3503AA20F31E4D"
+          - "0x9bF951848288cCD87d06FaC426150262cD3447De"
+          - "0x18CC3C68A5e64b40c846Aa6E45312cbcBb94f71b"
+        start_block: 15399347
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeRootGauge
+      - name: GaugeSingleRecipientGauge
+      - name: GaugeInjectorContract
+
+  # ===== Gnosis =====
+  - id: 100
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 37360338
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 37360338
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xEB1eeaBF0126d813589C3D2CfeFFE410D9aE3863"
+        start_block: 37371691
+      - name: V3WeightedPoolV2Factory
+        address: "0x78Ad1e1c10033b18ceaa20088e4e490BE42A5417"
+        start_block: 44199319
+      - name: V3StablePoolFactory
+        address: "0x22625eEDd92c81a219A83e1dc48f88d54786B017"
+        start_block: 37371860
+      - name: V3StablePoolV2Factory
+        address: "0x161f4014C27773840ccb4EC1957113e6DD028846"
+        start_block: 39136290
+      - name: V3StablePoolV3Factory
+        address: "0x9338F9484120FdFe8f8abEa8E5d6d9D8D055962D"
+        start_block: 44199860
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x7fA49Df302a98223d98D115fc4FCD275576f6faA"
+        start_block: 39369934
+      - name: V3GyroECLPPoolFactory
+        address: "0xEa924b45a3fcDAAdf4E5cFB1665823B8F8F2039B"
+        start_block: 39033094
+      - name: V3LBPoolFactory
+        address: "0x6eE18fbb1BBcC5CF700cD75ea1aef2bb21e3cB3F"
+        start_block: 38862663
+      - name: V3LBPoolV2Factory
+        address: "0x53EFf5068A1A3b39a9157DA6eF5A18d555c479eF"
+        start_block: 40976108
+      - name: V3LBPoolV3Factory
+        address: "0x2FAa140F90f76eeEEBC191f4eF4b2634be1E4e91"
+        start_block: 43779259
+      - name: V3FixedPriceLBPoolFactory
+        address: "0xD9E91f7aD501929b089992842a3f193795E6479e"
+        start_block: 43795554
+      - name: V3ReClammPoolFactory
+        address: "0x1780e8185199DAc45284039Bb3E3B64060D943AB"
+        start_block: 40516797
+      - name: V3ReClammPoolV2Factory
+        address: "0xc86eF81E57492BE65BFCa9b0Ed53dCBAfDBe6100"
+        start_block: 40884126
+      - name: V3StableSurgeHook
+        address: "0xe4f1878eC9710846E2B529C1b5037F8bA94583b1"
+        start_block: 38432088
+      - name: V3StableSurgeHookV2
+        address: "0x90BD26fbb9dB17D75b56E4cA3A4c438FA7C93694"
+        start_block: 39385569
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 24821598
+      - name: V2EventEmitter
+        address: "0xd8bf95b44772213905a8a74881862347acbabc48"
+        start_block: 26892431
+      - name: V2PoolFactory
+        address:
+          - "0xf302f9F50958c5593770FDf4d4812309fF77414f"
+          - "0xC128a9954e6c874eA3d62ce62B468bA073093F25"
+          - "0x6CaD2ea22BFA7F4C14Aae92E47F510Cd5C509bc7"
+          - "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+          - "0x76578ecf9a141296Ec657847fb45B0585bCDa3a6"
+          - "0xC128468b7Ce63eA702C1f104D55A2566b13D3ABD"
+          - "0xD87F44Df0159DC78029AB9CA7D7e57E7249F5ACD"
+          - "0x4bdCc2fb18AEb9e2d281b0278D946445070EAda7"
+          - "0x47B489bf5836f83ABD928C316F8e39bC0587B020"
+          - "0x9dd5Db2d38b50bEF682cE532bCca5DfD203915E1"
+          - "0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c"
+          - "0x62aaB12865d7281048c337D53a4dde9d770321E6"
+          - "0x4132f7AcC9dB7A6cF7BE2Dd3A9DC8b30C7E6E6c8"
+          - "0x85a80afee867aDf27B50BdB7b76DA70f1E853062"
+          - "0xDF9B5B00Ef9bca66e9902Bd813dB14e4343Be025"
+        start_block: 24821598
+      - name: V2Pool
+      - name: V2ProtocolIdRegistry
+        address: "0x6B5dA774890Db7B7b96C6f44e6a4b0F657399E2e"
+        start_block: 26691522
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0x8F42aDBbA1B16EaAE3BB5754915E0D06059aDd75"
+        start_block: 25140518
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 28110199
+      - name: ChildChainGaugeV1Factory
+        address: "0x809B79b53F18E9bc08A961ED4678B901aC93213a"
+        start_block: 26615210
+      - name: ChildChainGaugeV2Factory
+        address: "0x83E443EF4f9963C77bd860f94500075556668cb8"
+        start_block: 27088528
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== Sepolia =====
+  - id: 11155111
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 7212247
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 7212247
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0x7532d5a3bE916e4a4D900240F49F0BABd4FD855C"
+        start_block: 7216947
+      - name: V3WeightedPoolV2Factory
+        address: "0xc383B240B40660cca6c5b6Fbf4fbAb85E9F4de24"
+        start_block: 10058578
+      - name: V3StablePoolFactory
+        address: "0xd67F485C07D258B3e93835a3799d862ffcB55923"
+        start_block: 7216947
+      - name: V3StablePoolV2Factory
+        address: "0xc274A11E09a3c92Ac64eAff5bEC4ee8f5dfEe207"
+        start_block: 7944011
+      - name: V3StablePoolV3Factory
+        address: "0x472FAE37a8A05474fDe0CcfF6d239719f8881fF5"
+        start_block: 10058789
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x38ce8e04EBC04A39BED4b097e8C9bb8Ca74e33d8"
+        start_block: 8042511
+      - name: V3GyroECLPPoolFactory
+        address: "0x589cA6855C348d831b394676c25B125BcdC7F8ce"
+        start_block: 7901684
+      - name: V3QuantAMMWeightedPoolFactory
+        address: "0x7493F1AbeD1BdC6A160b62e676a5C44F8dFD7c60"
+        start_block: 8123674
+      - name: V3LBPoolFactory
+        address: "0xA714753434481DbaBf7921963f18190636eCde69"
+        start_block: 7831623
+      - name: V3LBPoolV2Factory
+        address: "0xE92cF5185384f53B2af74A2eBA62ba3A9C0ED65B"
+        start_block: 8715886
+      - name: V3LBPoolV3Factory
+        address: "0x7fed0fd2843232973eE2F61120e9D9C5eB78Cb16"
+        start_block: 9875019
+      - name: V3FixedPriceLBPoolFactory
+        address: "0x57Ef4cB125d1c690dF98118281090b7CdC7b9F85"
+        start_block: 9899600
+      - name: V3ReClammPoolFactory
+        address: "0x2A4054779DaDf4Cf3F4849f1AC307845F182cfE5"
+        start_block: 8520198
+      - name: V3ReClammPoolV2Factory
+        address: "0xf58A574530Ea5cEB727095e6039170c1e8068fcA"
+        start_block: 8676768
+      - name: V3StableSurgeHook
+        address: "0x30CE53fA38a1399F0CA158b5c38362c80E423bA9"
+        start_block: 7655004
+      - name: V3StableSurgeHookV2
+        address: "0x7dfca838fD5fCd70f876431D41CaA3E3E2ea1520"
+        start_block: 8048919
+      # Gauge contracts
+      - name: GaugeController
+        address: "0x577e5993B9Cc480F07F98B5Ebd055604bd9071C4"
+        start_block: 3425067
+      - name: VotingEscrowContract
+        address: "0x150A72e4D4d81BbF045565E232c50Ed0931ad795"
+        start_block: 3425066
+      - name: GaugeAuthorizerAdaptor
+        address: "0xb9aD3466cdd42015cc05d4804DC68D562b6a2065"
+        start_block: 3421600
+      - name: GaugeLiquidityV2Factory
+        address: "0x2FF226CD12C80511a641A6101F071d853A4e5363"
+        start_block: 3425130
+      - name: SingleRecipientGaugeV2Factory
+        address: "0x7EE4D172Ae50C627a1BFA9A99E1260C54dA26fdF"
+        start_block: 3425172
+      - name: ChildChainGaugeV2Factory
+        address: "0xC370cD86d5488c1788b62f11b09adb0C47F47440"
+        start_block: 3425268
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeRootGauge
+      - name: GaugeSingleRecipientGauge
+      - name: GaugeInjectorContract
+
+  # ===== Arbitrum =====
+  - id: 42161
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 297810187
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 297810187
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xD961E30156C2E0D0d925A0De45f931CB7815e970"
+        start_block: 297830075
+      - name: V3WeightedPoolV2Factory
+        address: "0x83bf399FA3DC49Af8fb5c34031a50c7C93F56129"
+        start_block: 422073053
+      - name: V3StablePoolFactory
+        address: "0xEB1eeaBF0126d813589C3D2CfeFFE410D9aE3863"
+        start_block: 297829373
+      - name: V3StablePoolV2Factory
+        address: "0x44d33798dddCdAbc93Fe6a40C80588033Dc502d3"
+        start_block: 317750010
+      - name: V3StablePoolV3Factory
+        address: "0x1FC7F1F84CFE61a04224AC8D3F87f56214FeC08c"
+        start_block: 422084277
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x65A22Ec32c37835Ad5E77Eb6f7452Ac59E113a9F"
+        start_block: 322520182
+      - name: V3GyroECLPPoolFactory
+        address: "0x88ED12A90142fDBFe2a28f7d5b48927254C7e760"
+        start_block: 315658096
+      - name: V3QuantAMMWeightedPoolFactory
+        address: "0x62B9eC6A5BBEBe4F5C5f46C8A8880df857004295"
+        start_block: 331549791
+      - name: V3LBPoolFactory
+        address: "0x4BB42f71CAB7Bd13e9f958dA4351B9fa2d3A42FF"
+        start_block: 312191153
+      - name: V3LBPoolV2Factory
+        address: "0x8D217CB74f675B46cC2767C8cF0aAB53BE1c4818"
+        start_block: 355383090
+      - name: V3LBPoolV3Factory
+        address: "0xF9309a99836b5F07a2440c177C049b0f0A9A2c33"
+        start_block: 412397509
+      - name: V3FixedPriceLBPoolFactory
+        address: "0x7f246E7Bab4CdC8C7AB41EaDA8290009a5b26E0D"
+        start_block: 413691627
+      - name: V3ReClammPoolFactory
+        address: "0xa1D0791a41318c775707C56eAe247AF81a05322C"
+        start_block: 345984008
+      - name: V3ReClammPoolV2Factory
+        address: "0x355bD33F0033066BB3DE396a6d069be57353AD95"
+        start_block: 353502388
+      - name: V3StableSurgeHook
+        address: "0x0Fa0f9990D7969a7aE6f9961d663E4A201Ed6417"
+        start_block: 303403113
+      - name: V3StableSurgeHookV2
+        address: "0x7c1b7A97BfAcD39975dE53e989A16c7BC4C78275"
+        start_block: 322836701
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 222832
+      - name: V2EventEmitter
+        address: "0x8f32D631093B5418d0546f77442c5fa66187E59D"
+        start_block: 53475240
+      - name: V2PoolFactory
+        address:
+          - "0x7dFdEF5f355096603419239CE743BfaF1120312B"
+          - "0x8df6EfEc5547e31B0eb7d1291B511FF8a2bf987c"
+          - "0xf1665E19bc105BE4EDD3739F88315cC699cc5b65"
+          - "0xc7E5ED1054A24Ef31D827E6F86caA58B3Bc168d7"
+          - "0xCF0a32Bbef8F064969F21f7e02328FB577382018"
+          - "0x2433477A10FC5d31B9513C638F19eE85CaED53Fd"
+          - "0xEF44D6786b2b4d544b7850Fe67CE6381626Bf2D6"
+          - "0xaEb406b0E430BF5Ea2Dc0B9Fe62E4E53f74B3a33"
+          - "0x85a80afee867aDf27B50BdB7b76DA70f1E853062"
+          - "0x1c99324EDC771c82A0DCCB780CC7DDA0045E50e7"
+          - "0x2498A2B0d6462d2260EAC50aE1C3e03F4829BA95"
+          - "0xA8920455934Da4D853faac1f94Fe7bEf72943eF1"
+          - "0x4bdCc2fb18AEb9e2d281b0278D946445070EAda7"
+          - "0xEBFD5681977E38Af65A7487DC70B8221D089cCAD"
+          - "0x142B9666a0a3A30477b052962ddA81547E7029ab"
+          - "0x1802953277FD955f9a254B80Aa0582f193cF1d77"
+          - "0xaCd615B3705B9c880E4E7293f1030B34e57B4c1c"
+          - "0x8eA89804145c007e7D226001A96955ad53836087"
+          - "0x2794953110874981a0d301286c986992022A62a1"
+          - "0xe2E901AB09f37884BA31622dF3Ca7FC19AA443Be"
+          - "0xa2D801064652A269D92EE2A59F3261155ec66830"
+          - "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+          - "0x7396f99B48e7436b152427bfA3DD6Aa8C7C6d05B"
+          - "0xa3B9515A9c557455BC53F7a535A85219b59e8B2E"
+          - "0x7ADbdabaA80F654568421887c12F09E0C7BD9629"
+          - "0xdCA5f1F0d7994A32BC511e7dbA0259946653Eaf6"
+          - "0x7a36527A02d96693b0AF2b70421F952816a4a088"
+        start_block: 222832
+      - name: V2Pool
+      - name: V2ProtocolIdRegistry
+        address: "0x5cF4928a3205728bd12830E1840F7DB85c62a4B9"
+        start_block: 65101370
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0x97207B095e4D5C9a6e4cfbfcd2C3358E03B90c4A"
+        start_block: 40916259
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 94050211
+      - name: ChildChainGaugeV1Factory
+        address: "0xb08E16cFc07C684dAA2f93C70323BAdb2A6CBFd2"
+        start_block: 9756975
+      - name: ChildChainGaugeV2Factory
+        address: "0x6817149cb753BF529565B4D023d7507eD2ff4Bc0"
+        start_block: 72942741
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== Base =====
+  - id: 8453
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 25343854
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 25343854
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0x5cF4928a3205728bd12830E1840F7DB85c62a4B9"
+        start_block: 25347415
+      - name: V3WeightedPoolV2Factory
+        address: "0xBDbADc891BB95DEE80eBC491699228EF0f7D6fF1"
+        start_block: 40902756
+      - name: V3StablePoolFactory
+        address: "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
+        start_block: 25347318
+      - name: V3StablePoolV2Factory
+        address: "0xC49Ca921c4CD1117162eAEEC0ee969649997950c"
+        start_block: 27852880
+      - name: V3StablePoolV3Factory
+        address: "0xFc2986feAB34713E659da84F3B1FA32c1da95832"
+        start_block: 40904166
+      - name: V3Gyro2CLPPoolFactory
+        address: "0xf5CDdF6feD9C589f1Be04899F48f9738531daD59"
+        start_block: 28450062
+      - name: V3GyroECLPPoolFactory
+        address: "0x5F6848976C2914403B425F18B589A65772F082E3"
+        start_block: 27590349
+      - name: V3QuantAMMWeightedPoolFactory
+        address: "0x62B9eC6A5BBEBe4F5C5f46C8A8880df857004295"
+        start_block: 29577953
+      - name: V3LBPoolFactory
+        address: "0x662112B8CB18889e81459b92CA0f894a2ef2c1B8"
+        start_block: 27155451
+      - name: V3LBPoolV2Factory
+        address: "0x0b11209B8c5E821b18dED147583b8978c3E63911"
+        start_block: 32573861
+      - name: V3LBPoolV3Factory
+        address: "0x6eE18fbb1BBcC5CF700cD75ea1aef2bb21e3cB3F"
+        start_block: 39693973
+      - name: V3FixedPriceLBPoolFactory
+        address: "0xb96524227c4B5Ab908FC3d42005FE3B07abA40E9"
+        start_block: 39855606
+      - name: V3ReClammPoolFactory
+        address: "0x3BEb058DE1A25dd24223fd9e1796df8589429AcE"
+        start_block: 31396631
+      - name: V3ReClammPoolV2Factory
+        address: "0x201efd508c8DfE9DE1a13c2452863A78CB2a86Cc"
+        start_block: 32339174
+      - name: V3StableSurgeHook
+        address: "0xb2007B8B7E0260042517f635CFd8E6dD2Dd7f007"
+        start_block: 26049433
+      - name: V3StableSurgeHookV2
+        address: "0xDB8d758BCb971e482B2C45f7F8a7740283A1bd3A"
+        start_block: 28489956
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 1196036
+      - name: V2EventEmitter
+        address: "0x94eA79f1dD4f1B89D87fE1E71c9723b8003AB3d3"
+        start_block: 1275405
+      - name: V2PoolFactory
+        address:
+          - "0x4C32a8a8fDa4E24139B51b456B42290f51d6A1c4"
+          - "0x8df317a729fcaA260306d7de28888932cb579b88"
+          - "0x956CCab09898C0AF2aCa5e6C229c3aD4E93d9288"
+          - "0x0c6052254551EAe3ECac77B01DFcf1025418828f"
+          - "0x15e86Be6084C6A5a8c17732D398dFbC2Ec574CEC"
+        start_block: 1196036
+      - name: V2Pool
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0x9129E834e15eA19b6069e8f08a8EcFc13686B8dC"
+        start_block: 1205742
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 2417884
+      - name: ChildChainGaugeV2Factory
+        address:
+          - "0x2498A2B0d6462d2260EAC50aE1C3e03F4829BA95"
+          - "0xb1a4FE1C6d25a0DDAb47431A92A723dd71d9021f"
+        start_block: 1204492
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== Optimism =====
+  - id: 10
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 133969431
+      - name: V3ProtocolFeeController
+        address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+        start_block: 133969431
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0x0f08eEf2C785AA5e7539684aF04755dEC1347b7c"
+        start_block: 133969652
+      - name: V3WeightedPoolV2Factory
+        address: "0x254F3A2974b97dc2E675f6115c845567C55f83b0"
+        start_block: 146498303
+      - name: V3StablePoolV2Factory
+        address: "0x268E2EE1413D768b6e2dc3F5a4ddc9Ae03d9AF42"
+        start_block: 133969860
+      - name: V3StablePoolV3Factory
+        address: "0x1780e8185199DAc45284039Bb3E3B64060D943AB"
+        start_block: 146499718
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x4b979eD48F982Ba0baA946cB69c1083eB799729c"
+        start_block: 134045195
+      - name: V3GyroECLPPoolFactory
+        address: "0x22625eEDd92c81a219A83e1dc48f88d54786B017"
+        start_block: 133969692
+      - name: V3ReClammPoolFactory
+        address: "0x0b11209B8c5E821b18dED147583b8978c3E63911"
+        start_block: 136991947
+      - name: V3ReClammPoolV2Factory
+        address: "0x891EC9B34829276a9a8ef2F8A9cEAF2486017e0d"
+        start_block: 137934460
+      - name: V3StableSurgeHookV2
+        address: "0xF39CA6ede9BF7820a952b52f3c94af526bAB9015"
+        start_block: 134085181
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 7003431
+      - name: V2EventEmitter
+        address: "0x082990116f256E078572a1b69772115d2cF6b0a2"
+        start_block: 99124541
+      - name: V2PoolFactory
+        address:
+          - "0xdAE7e32ADc5d490a43cCba1f0c736033F2b4eFca"
+          - "0xad901309d9e9DbC5Df19c84f729f429F0189a633"
+          - "0xA0DAbEBAAd1b243BBb243f933013d560819eB66f"
+          - "0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a"
+          - "0x0F3e0c4218b7b0108a3643cFe9D3ec0d4F57c54e"
+          - "0xeb151668006CD04DAdD098AFd0a82e78F77076c3"
+          - "0xf145caFB67081895EE80eB7c04A30Cf87f07b745"
+          - "0xe2E901AB09f37884BA31622dF3Ca7FC19AA443Be"
+          - "0x1802953277FD955f9a254B80Aa0582f193cF1d77"
+          - "0x043A2daD730d585C44FB79D2614F295D2d625412"
+          - "0x4bdCc2fb18AEb9e2d281b0278D946445070EAda7"
+          - "0xb08E16cFc07C684dAA2f93C70323BAdb2A6CBFd2"
+          - "0xf302f9F50958c5593770FDf4d4812309fF77414f"
+          - "0x4C32a8a8fDa4E24139B51b456B42290f51d6A1c4"
+          - "0x994086630773dC6cB54D3A5E0Ef0963532789E75"
+          - "0xAd3CC7852382C09fdCE54784292c6aB7fb9Df917"
+          - "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+          - "0x7396f99B48e7436b152427bfA3DD6Aa8C7C6d05B"
+          - "0x4C4287b07d293E361281bCeEe8715c8CDeB64E34"
+          - "0xa3B9515A9c557455BC53F7a535A85219b59e8B2E"
+          - "0x7ADbdabaA80F654568421887c12F09E0C7BD9629"
+          - "0x9b683ca24b0e013512e2566b68704dbe9677413c"
+        start_block: 7003431
+      - name: V2Pool
+      - name: V2ProtocolIdRegistry
+        address: "0x9805dcfD25e6De36bad8fe9D3Fe2c9b44B764102"
+        start_block: 77557576
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0xed86ff0c507D3AF5F35d3523B77C17415FCfFaCb"
+        start_block: 41872979
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 101185055
+      - name: ChildChainGaugeV1Factory
+        address: "0x2E96068b3D5B5BAE3D7515da4A1D2E52d08A2647"
+        start_block: 9052485
+      - name: ChildChainGaugeV2Factory
+        address: "0xa523f47A933D5020b23629dDf689695AA94612Dc"
+        start_block: 83239534
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== Avalanche =====
+  - id: 43114
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 59955604
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 59955604
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xD961E30156C2E0D0d925A0De45f931CB7815e970"
+        start_block: 59965815
+      - name: V3WeightedPoolV2Factory
+        address: "0xBDbADc891BB95DEE80eBC491699228EF0f7D6fF1"
+        start_block: 75901404
+      - name: V3StablePoolV2Factory
+        address: "0xEAedc32a51c510d35ebC11088fD5fF2b47aACF2E"
+        start_block: 59966208
+      - name: V3StablePoolV3Factory
+        address: "0x16B50F6bF8C8Ca73C07e17762188c5DEEe7aE5Db"
+        start_block: 75903744
+      - name: V3Gyro2CLPPoolFactory
+        address: "0xe2fa4e1d17725e72dcdAfe943Ecf45dF4B9E285b"
+        start_block: 59965891
+      - name: V3GyroECLPPoolFactory
+        address: "0x268E2EE1413D768b6e2dc3F5a4ddc9Ae03d9AF42"
+        start_block: 59965989
+      - name: V3ReClammPoolFactory
+        address: "0x1CD776897ef4f647bf8241Ec69549e4A9cb1D608"
+        start_block: 63645408
+      - name: V3ReClammPoolV2Factory
+        address: "0x309abcAeFa19CA6d34f0D8ff4a4103317c138657"
+        start_block: 64832650
+      - name: V3StableSurgeHookV2
+        address: "0x86705Ee19c0509Ff68F1118C55ee2ebdE383D122"
+        start_block: 59966257
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 26386141
+      - name: V2EventEmitter
+        address: "0xf04378a3ff97b3f979a46f91f9b2d5A1D2394773"
+        start_block: 33336746
+      - name: V2PoolFactory
+        address:
+          - "0x3B1eb8EB7b43882b385aB30533D9A2BeF9052a98"
+          - "0xE42FFA682A26EF8F25891db4882932711D42e467"
+          - "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
+          - "0x94f68b54191F62f781Fe8298A8A5Fa3ed772d227"
+          - "0x230a59F4d9ADc147480f03B0D3fFfeCd56c3289a"
+          - "0x0F3e0c4218b7b0108a3643cFe9D3ec0d4F57c54e"
+          - "0x03F3Fb107e74F2EAC9358862E91ad3c692712054"
+          - "0x6caf662b573F577DE01165d2d38D1910bba41F8A"
+          - "0x4507d91Cd2C0D51D9B4F30Bf0B93AFC938A70BA5"
+        start_block: 26386141
+      - name: V2Pool
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0x4E7bBd911cf1EFa442BC1b2e9Ea01ffE785412EC"
+        start_block: 26387586
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 30445851
+      - name: ChildChainGaugeV2Factory
+        address: "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+        start_block: 32558551
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== Sonic =====
+  - id: 146
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 368135
+      - name: V3ProtocolFeeController
+        address: "0xa731C23D7c95436Baaae9D52782f966E1ed07cc8"
+        start_block: 368135
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0x4726Eb55c37F0353F6d5011B5652d44A87d60fc3"
+        start_block: 381432
+      - name: V3WeightedPoolV2Factory
+        address: "0x7F43e26A3f58446C4dF021a690dc56a3968962ED"
+        start_block: 61250433
+      - name: V3StablePoolFactory
+        address: "0x815Ab57a5a2E4976cEC0b43C2D50CF26EF6F31Fd"
+        start_block: 381473
+      - name: V3StablePoolV2Factory
+        address: "0x482eE54595f79B6BA34b75754A4983134148Affb"
+        start_block: 17236613
+      - name: V3StablePoolV3Factory
+        address: "0x3ed9B71B5cC9CB5987Ecb63B88923824C890e0f9"
+        start_block: 61250433
+      - name: V3GyroECLPPoolFactory
+        address: "0xf023731dD8758D7C869af10005e6380Cb57775a9"
+        start_block: 14211027
+      - name: V3QuantAMMWeightedPoolFactory
+        address: "0x60006d255569b36a3d494e83D182b57acd04D484"
+        start_block: 31661323
+      - name: V3ReClammPoolV2Factory
+        address: "0x99c13B259138a8ad8badbBfB87A4074591310De0"
+        start_block: 38897147
+      - name: V3StableSurgeHook
+        address: "0x8A83Aa9bb7C4Cff14ae0aEcec0fB9ef234901c0C"
+        start_block: 8689860
+      - name: V3StableSurgeHookV2
+        address: "0x049919Ae32E50aEe5ea1A0998a841d175ec6f1b3"
+        start_block: 20504697
+
+  # ===== Polygon =====
+  - id: 137
+    start_block: 0
+    contracts:
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 15832990
+      - name: V2EventEmitter
+        address: "0xcdcECFa416EE3022030E707dC3EA13a8997D74c8"
+        start_block: 38152461
+      - name: V2PoolFactory
+        address:
+          - "0x8E9aa87E45e92bad84D5F8DD1bff34Fb92637dE9"
+          - "0x0e39C3D9b2ec765eFd9c5c70BB290B1fCD8536E3"
+          - "0x82e4cFaef85b1B6299935340c964C942280327f4"
+          - "0xFc8a407Bba312ac761D8BFe04CE1201904842B76"
+          - "0xA5bf2ddF098bb0Ef6d120C98217dD6B141c74EE0"
+          - "0xc66Ba2B6595D3613CCab350C886aCE23866EDe24"
+          - "0xcA96C4f198d343E251b1a01F3EBA061ef3DA73C1"
+          - "0x136FD06Fa01eCF624C7F2B3CB15742c1339dC2c4"
+          - "0x85a80afee867aDf27B50BdB7b76DA70f1E853062"
+          - "0x7bc6C0E73EDAa66eF3F6E2f27b0EE8661834c6C9"
+          - "0x6Ab5549bBd766A43aFb687776ad8466F8b42f777"
+          - "0xe2fa4e1d17725e72dcdAfe943Ecf45dF4B9E285b"
+          - "0xEAedc32a51c510d35ebC11088fD5fF2b47aACF2E"
+          - "0xdAE7e32ADc5d490a43cCba1f0c736033F2b4eFca"
+          - "0x751A0bC0e3f75b38e01Cf25bFCE7fF36DE1C87DE"
+          - "0x41B953164995c11C81DA73D212ED8Af25741b7Ac"
+          - "0x0f7bb7ce7b6ed9366F9b6B910AdeFE72dC538193"
+          - "0xB8Dfa4fd0F083de2B7EDc0D5eeD5E684e54bA45D"
+          - "0xC128a9954e6c874eA3d62ce62B468bA073093F25"
+          - "0xf302f9F50958c5593770FDf4d4812309fF77414f"
+          - "0x8df6EfEc5547e31B0eb7d1291B511FF8a2bf987c"
+          - "0x35c425234DC42e7402f54cC54573f77842963a56"
+          - "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+          - "0xAB2372275809E15198A7968C7f324053867cdB0C"
+          - "0xC6bD2497332d24094eC16a7261eec5C412B5a2C1"
+          - "0x6637dA12881f66dC7E42b8879B0a79faF43C9be2"
+          - "0xa3B9515A9c557455BC53F7a535A85219b59e8B2E"
+          - "0x5C5fCf8fBd4cd563cED27e7D066b88ee20E1867A"
+          - "0x7396f99B48e7436b152427bfA3DD6Aa8C7C6d05B"
+          - "0x0b576c1245F479506e7C8bbc4dB4db07C1CD31F9"
+          - "0x5d8545a7330245150bE0Ce88F8afB0EDc41dFc34"
+          - "0x90f08B3705208E41DbEEB37A42Fb628dD483AdDa"
+          - "0xD4204551BC5397455f8897745d50Ac4F6beE0EF6"
+          - "0x1a79A24Db0F73e9087205287761fC9C5C305926b"
+        start_block: 15832990
+      - name: V2Pool
+      - name: V2ProtocolIdRegistry
+        address: "0xa523f47A933D5020b23629dDf689695AA94612Dc"
+        start_block: 39769528
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0xAB093cd16e765b5B23D34030aaFaF026558e0A19"
+        start_block: 36020863
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 43103222
+      - name: ChildChainGaugeV1Factory
+        address: "0x3b8cA519122CdD8efb272b0D3085453404B25bD0"
+        start_block: 27098624
+      - name: ChildChainGaugeV2Factory
+        address: "0x22625eEDd92c81a219A83e1dc48f88d54786B017"
+        start_block: 40687417
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
