@@ -28,9 +28,9 @@ node_modules/
 build/
 benchmarks/
 artifacts
-cache
 *.res.js
 *.res.mjs
 generated
 .env
+.DS_Store
 .pnpm-store

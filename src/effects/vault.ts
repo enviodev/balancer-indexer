@@ -65,7 +65,7 @@ export const getPoolTokenBalances = createEffect(
     name: "getPoolTokenBalances",
     input: S.schema({ vaultAddress: S.string, poolAddress: S.string, chainId: S.number, blockNumber: S.number }),
     output: S.array(S.string),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {
@@ -76,6 +76,7 @@ export const getPoolTokenBalances = createEffect(
         abi: VAULT_EXTENSION_ABI,
         functionName: "getPoolTokenInfo",
         args: [input.poolAddress as `0x${string}`],
+        blockNumber: BigInt(input.blockNumber),
       }) as [string[], any[], bigint[], bigint[]];
       return result[2].map(b => b.toString());
     } catch {
@@ -89,7 +90,7 @@ export const getAggregateYieldFeeAmount = createEffect(
     name: "getAggregateYieldFeeAmount",
     input: S.schema({ vaultAddress: S.string, poolAddress: S.string, tokenAddress: S.string, chainId: S.number, blockNumber: S.number }),
     output: S.union([S.string, null]),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {
@@ -100,6 +101,7 @@ export const getAggregateYieldFeeAmount = createEffect(
         abi: VAULT_EXTENSION_ABI,
         functionName: "getAggregateYieldFeeAmount",
         args: [input.poolAddress as `0x${string}`, input.tokenAddress as `0x${string}`],
+        blockNumber: BigInt(input.blockNumber),
       });
       return (result as bigint).toString();
     } catch {

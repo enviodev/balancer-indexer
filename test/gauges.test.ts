@@ -147,7 +147,7 @@ describe("setRewardData", () => {
       },
     });
 
-    await setRewardData("0xgauge", "0xtoken", 1, ctx);
+    await setRewardData("0xgauge", "0xtoken", 1, 12345678, ctx);
 
     const updated = await ctx.RewardToken.get("1-0xtoken-0xgauge");
     expect(updated).not.toBeNull();

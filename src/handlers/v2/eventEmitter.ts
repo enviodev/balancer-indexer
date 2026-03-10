@@ -94,7 +94,7 @@ V2EventEmitter.LogArgument.handler(async ({ event, context }) => {
 
     const rewardTokensList = gauge.rewardTokensList ?? [];
     for (const tokenAddress of rewardTokensList) {
-      await setRewardData(gaugeAddress, tokenAddress, chainId, context);
+      await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
     }
   } else if (identifier === SET_SWAP_ENABLED) {
     // pool param = pool address (in V2 subgraph: poolId hex string)

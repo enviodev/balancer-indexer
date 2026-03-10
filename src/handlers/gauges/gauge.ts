@@ -86,7 +86,7 @@ async function handleGaugeTransfer(
   // Update reward data for all reward tokens on this gauge
   const rewardTokensList = updatedGauge.rewardTokensList ?? [];
   for (const tokenAddress of rewardTokensList) {
-    await setRewardData(gaugeAddress, tokenAddress, chainId, context);
+    await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
   }
 }
 
@@ -169,7 +169,7 @@ GaugeChildChainStreamer.RewardDurationUpdated.handler(async ({ event, context })
   });
 
   if (gaugeAddress) {
-    await setRewardData(gaugeAddress.toLowerCase(), rewardTokenAddress, chainId, context);
+    await setRewardData(gaugeAddress.toLowerCase(), rewardTokenAddress, chainId, event.block.number, context);
   }
 });
 
@@ -182,7 +182,7 @@ GaugeInjectorContract.EmissionsInjection.handler(async ({ event, context }) => {
   const gaugeAddress = event.params.gauge.toLowerCase();
   const tokenAddress = event.params.token.toLowerCase();
 
-  await setRewardData(gaugeAddress, tokenAddress, chainId, context);
+  await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
 });
 
 // ================================
@@ -204,5 +204,5 @@ GaugeAuthorizerAdaptor.ActionPerformed.handler(async ({ event, context }) => {
   const tokenAddress = ("0x" + data.slice(34, 74)).toLowerCase();
   const gaugeAddress = event.params.target.toLowerCase();
 
-  await setRewardData(gaugeAddress, tokenAddress, chainId, context);
+  await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
 });

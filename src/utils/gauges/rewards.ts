@@ -58,6 +58,7 @@ export async function setRewardData(
   gaugeAddress: string,
   tokenAddress: string,
   chainId: number,
+  blockNumber: number,
   context: any,
 ): Promise<void> {
   const rewardToken = await getOrCreateRewardToken(gaugeAddress, tokenAddress, chainId, context);
@@ -68,6 +69,7 @@ export async function setRewardData(
     address: gaugeAddress,
     tokenAddress,
     chainId,
+    blockNumber,
   });
 
   if (rewardData) {

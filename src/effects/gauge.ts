@@ -110,12 +110,12 @@ export const getGaugeIsKilled = createEffect(
 export const getGaugeRewardData = createEffect(
   {
     name: "getGaugeRewardData",
-    input: S.schema({ address: S.string, tokenAddress: S.string, chainId: S.number }),
+    input: S.schema({ address: S.string, tokenAddress: S.string, chainId: S.number, blockNumber: S.number }),
     output: S.union([
       S.schema({ rate: S.string, period_finish: S.string }),
       null,
     ]),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {
@@ -126,6 +126,7 @@ export const getGaugeRewardData = createEffect(
         abi: GAUGE_ABI,
         functionName: "reward_data",
         args: [input.tokenAddress as `0x${string}`],
+        blockNumber: BigInt(input.blockNumber),
       });
       const [, periodFinish, rate] = result as [string, bigint, bigint, bigint, bigint];
       return {
