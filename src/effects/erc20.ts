@@ -33,7 +33,9 @@ export const getTokenMetadata = createEffect(
         client.readContract({ address: addr, abi: ERC20_ABI, functionName: "symbol" }).catch(() => ""),
         client.readContract({ address: addr, abi: ERC20_ABI, functionName: "decimals" }).catch(() => 18),
       ]);
-      return { name: name as string, symbol: symbol as string, decimals: Number(decimals) };
+      // Strip null bytes — PostgreSQL rejects \u0000 in text/JSON fields
+      const sanitize = (s: string) => s.replace(/\0/g, "");
+      return { name: sanitize(name as string), symbol: sanitize(symbol as string), decimals: Number(decimals) };
     } catch {
       return { name: "", symbol: "", decimals: 18 };
     }

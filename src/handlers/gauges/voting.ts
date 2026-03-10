@@ -155,6 +155,12 @@ GaugeController.NewGauge.handler(async ({ event, context }) => {
     rootGauge_id: rootGauge ? liquidityGaugeId : undefined,
   });
 
+  // Create lookup so VoteForGauge can resolve address -> full Gauge ID
+  context.GaugeLookup.set({
+    id: liquidityGaugeId, // ${chainId}-${gaugeAddress}
+    gaugeId: gaugeId,     // ${chainId}-${gaugeAddress}-${gaugeType}
+  });
+
   // Update references on sub-gauge entities
   if (rootGauge) {
     context.RootGauge.set({ ...rootGauge, gauge_id: gaugeId });
@@ -204,16 +210,16 @@ GaugeController.VoteForGauge.handler(async ({ event, context }) => {
   const voteId = `${chainId}-${userAddress}-${gaugeAddress}`;
   let vote = await context.GaugeVote.get(voteId);
 
-  // For the gauge_id, we need the Gauge entity ID which is `${chainId}-${gaugeAddress}-${gaugeType}`
-  // We don't know the gaugeType from this event, so we use a simplified lookup
-  // The gauge_id will be set to a placeholder; ideally we'd look up the Gauge entity
-  const gaugeEntityId = makeChainId(chainId, gaugeAddress);
+  // Look up the full Gauge entity ID (which includes gauge type) via GaugeLookup
+  const lookupKey = makeChainId(chainId, gaugeAddress);
+  const gaugeLookup = await context.GaugeLookup.get(lookupKey);
+  const gaugeEntityId = gaugeLookup ? gaugeLookup.gaugeId : lookupKey;
 
   if (!vote) {
     vote = {
       id: voteId,
       user_id: userId,
-      gauge_id: gaugeEntityId, // simplified — may need proper Gauge entity lookup
+      gauge_id: gaugeEntityId,
       weight: undefined,
       timestamp: undefined,
     };
@@ -221,6 +227,7 @@ GaugeController.VoteForGauge.handler(async ({ event, context }) => {
 
   context.GaugeVote.set({
     ...vote,
+    gauge_id: gaugeEntityId,
     weight: scaleDown(event.params.weight, 18),
     timestamp: event.params.time,
   });

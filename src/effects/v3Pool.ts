@@ -39,6 +39,16 @@ const RECLAMM_ABI = parseAbi([
   "function getDailyPriceShiftExponent() view returns (uint256)",
 ]);
 
+const QUANTAMM_ABI = parseAbi([
+  "function getQuantAMMWeightedPoolImmutableData() view returns ((uint256 absoluteWeightGuardRail, uint256 maxTradeSizeRatio, uint64 oracleStalenessThreshold, uint64 updateInterval, int256[] lambda, int256 epsilonMax, address poolRegistry))",
+  "function getQuantAMMWeightedPoolDynamicData() view returns ((int256[8] firstFourWeightsAndMultipliers, int256[8] secondFourWeightsAndMultipliers, uint40 lastInteropTime, uint40 lastUpdateTime))",
+  "function updateWeightRunner() view returns (address)",
+]);
+
+const QUANTAMM_RUNNER_ABI = parseAbi([
+  "function getPoolRule(address pool) view returns (address)",
+]);
+
 const STABLE_SURGE_ABI = parseAbi([
   "function getMaxSurgeFeePercentage(address pool) view returns (uint256)",
   "function getSurgeThresholdPercentage(address pool) view returns (uint256)",
@@ -337,6 +347,105 @@ export const getReClammParams = createEffect(
         endFourthRootPriceRatio: data.endFourthRootPriceRatio.toString(),
         priceRatioUpdateStartTime: data.priceRatioUpdateStartTime.toString(),
         priceRatioUpdateEndTime: data.priceRatioUpdateEndTime.toString(),
+      };
+    } catch {
+      return null;
+    }
+  }
+);
+
+// QuantAMM Weighted pool params
+export const getQuantAMMParams = createEffect(
+  {
+    name: "getQuantAMMParams",
+    input: S.schema({ address: S.string, chainId: S.number }),
+    output: S.union([
+      S.schema({
+        absoluteWeightGuardRail: S.string,
+        maxTradeSizeRatio: S.string,
+        oracleStalenessThreshold: S.string,
+        updateInterval: S.string,
+        lambda: S.array(S.string),
+        epsilonMax: S.string,
+        poolRegistry: S.string,
+        weightsAtLastUpdateInterval: S.array(S.string),
+        weightBlockMultipliers: S.array(S.string),
+        lastInterpolationTimePossible: S.string,
+        lastUpdateIntervalTime: S.string,
+        runner: S.string,
+        rule: S.string,
+      }),
+      null,
+    ]),
+    cache: true,
+    rateLimit: false,
+  },
+  async ({ input }) => {
+    const client = getEffectClient(input.chainId);
+    const addr = input.address as `0x${string}`;
+    try {
+      const immutableData = await client.readContract({
+        address: addr,
+        abi: QUANTAMM_ABI,
+        functionName: "getQuantAMMWeightedPoolImmutableData",
+      }) as any;
+
+      const dynamicData = await client.readContract({
+        address: addr,
+        abi: QUANTAMM_ABI,
+        functionName: "getQuantAMMWeightedPoolDynamicData",
+      }) as any;
+
+      // Weights are in first 4 slots of each array, multipliers in slots 4-7
+      const firstFour = dynamicData.firstFourWeightsAndMultipliers as bigint[];
+      const secondFour = dynamicData.secondFourWeightsAndMultipliers as bigint[];
+
+      const weightsAtLastUpdateInterval = [
+        ...firstFour.slice(0, 4),
+        ...secondFour.slice(0, 4),
+      ].map(v => v.toString());
+
+      const weightBlockMultipliers = [
+        ...firstFour.slice(4, 8),
+        ...secondFour.slice(4, 8),
+      ].map(v => v.toString());
+
+      // Get runner and rule addresses
+      let runner = "";
+      let rule = "";
+      try {
+        const runnerAddr = await client.readContract({
+          address: addr,
+          abi: QUANTAMM_ABI,
+          functionName: "updateWeightRunner",
+        }) as string;
+        runner = runnerAddr;
+
+        try {
+          const ruleAddr = await client.readContract({
+            address: runnerAddr as `0x${string}`,
+            abi: QUANTAMM_RUNNER_ABI,
+            functionName: "getPoolRule",
+            args: [addr],
+          }) as string;
+          rule = ruleAddr;
+        } catch { /* ignore rule fetch failure */ }
+      } catch { /* ignore runner fetch failure */ }
+
+      return {
+        absoluteWeightGuardRail: immutableData.absoluteWeightGuardRail.toString(),
+        maxTradeSizeRatio: immutableData.maxTradeSizeRatio.toString(),
+        oracleStalenessThreshold: immutableData.oracleStalenessThreshold.toString(),
+        updateInterval: immutableData.updateInterval.toString(),
+        lambda: (immutableData.lambda as bigint[]).map(v => v.toString()),
+        epsilonMax: immutableData.epsilonMax.toString(),
+        poolRegistry: immutableData.poolRegistry.toString(),
+        weightsAtLastUpdateInterval,
+        weightBlockMultipliers,
+        lastInterpolationTimePossible: dynamicData.lastInteropTime.toString(),
+        lastUpdateIntervalTime: dynamicData.lastUpdateTime.toString(),
+        runner,
+        rule,
       };
     } catch {
       return null;

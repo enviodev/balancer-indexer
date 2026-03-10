@@ -1,5 +1,6 @@
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ONE_BD, V2_VAULT_ADDRESS } from "../constants.js";
+import { scaleDown } from "../math.js";
 import { makeChainId } from "../entities.js";
 import {
   v2PoolTokenId,
@@ -8,6 +9,8 @@ import {
   v2SnapshotId,
   defaultV2BalancerSnapshot,
 } from "./entities.js";
+import { isLinearPoolType } from "./pools.js";
+import { getWrappedTokenRate } from "../../effects/v2Pool.js";
 
 // ================================
 // Constants
@@ -373,6 +376,56 @@ export async function updateLatestPrice(
 }
 
 /**
+ * Set the wrapped token price for linear pools.
+ * The wrapped token is rarely traded, so we create an exceptional price entry
+ * using the on-chain rate from getWrappedTokenRate().
+ */
+export async function setWrappedTokenPrice(
+  pool: any,
+  blockNumber: number,
+  timestamp: number,
+  chainId: number,
+  context: any,
+): Promise<void> {
+  if (!pool.poolType || !isLinearPoolType(pool.poolType)) return;
+  if (!pool.totalLiquidity.gt(MIN_POOL_LIQUIDITY)) return;
+
+  const poolAddress = pool.address.toLowerCase();
+  const rateRaw = await context.effect(getWrappedTokenRate, { address: poolAddress, chainId });
+  if (!rateRaw) return;
+
+  const price = scaleDown(BigInt(rateRaw), 18);
+  const amount = ONE_BD;
+
+  const tokensList: string[] = pool.tokensList ?? [];
+  const wrappedIndex = pool.wrappedIndex;
+  const mainIndex = pool.mainIndex;
+
+  if (wrappedIndex == null || mainIndex == null) return;
+  if (!tokensList[wrappedIndex] || !tokensList[mainIndex]) return;
+
+  const asset = tokensList[wrappedIndex]!.toLowerCase();
+  const pricingAsset = tokensList[mainIndex]!.toLowerCase();
+
+  const poolEntityId = makeChainId(chainId, poolAddress);
+  const tokenPriceId = `${chainId}-${poolAddress}-${asset}-${pricingAsset}-${blockNumber}`;
+
+  const tokenPriceEntity = {
+    id: tokenPriceId,
+    pool_id: poolEntityId,
+    asset,
+    pricingAsset,
+    amount,
+    price,
+    block: BigInt(blockNumber),
+    timestamp,
+  };
+
+  context.V2TokenPrice.set(tokenPriceEntity);
+  await updateLatestPrice(tokenPriceEntity, timestamp, chainId, context);
+}
+
+/**
  * Update pool liquidity, BPT price, global totals, and snapshot.
  */
 export async function updatePoolLiquidity(
@@ -429,6 +482,17 @@ export async function updatePoolLiquidity(
   if (effectiveLiquidity.gt(MIN_POOL_LIQUIDITY)) {
     await updateBptPrice(
       { ...pool, totalLiquidity: effectiveLiquidity },
+      chainId,
+      context,
+    );
+  }
+
+  // Set wrapped token price for linear pools crossing the liquidity threshold
+  if (oldPoolLiquidity.lt(MIN_POOL_LIQUIDITY)) {
+    await setWrappedTokenPrice(
+      { ...pool, totalLiquidity: effectiveLiquidity },
+      blockNumber,
+      timestamp,
       chainId,
       context,
     );

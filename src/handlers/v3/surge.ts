@@ -1,4 +1,4 @@
-import { V3StableSurgeHook, V3StableSurgeHookV2, type V3StableSurgeParams } from "generated";
+import { V3StableSurgeHook, V3StableSurgeHookV2, V3StableSurgeHookV3, type V3StableSurgeParams } from "generated";
 import { ZERO_BD } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
 import { makeChainId } from "../../utils/entities.js";
@@ -67,4 +67,8 @@ V3StableSurgeHook.StableSurgeHookRegistered.handler(async ({ event, context }) =
 
 V3StableSurgeHookV2.StableSurgeHookRegistered.handler(async ({ event, context }) => {
   await handleStableSurgeRegistered(event, context, 2);
+});
+
+V3StableSurgeHookV3.StableSurgeHookRegistered.handler(async ({ event, context }) => {
+  await handleStableSurgeRegistered(event, context, 3);
 });

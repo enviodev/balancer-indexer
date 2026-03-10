@@ -250,3 +250,20 @@ export function isWeightedPoolType(poolType: string): boolean {
 export function isStablePoolType(poolType: string): boolean {
   return poolType === "Stable" || poolType === "MetaStable" || poolType === "ComposableStable" || poolType === "StablePhantom";
 }
+
+/**
+ * Check if a pool has variable weights that change over time (LBP, Investment, Managed).
+ * These pools need weight updates after every swap.
+ */
+export function isVariableWeightPool(poolType: string | undefined): boolean {
+  if (!poolType) return false;
+  return poolType === "LiquidityBootstrapping" || poolType === "Investment" || poolType === "Managed";
+}
+
+/**
+ * Check if a pool is an FX pool (Xave Finance foreign exchange pools)
+ */
+export function isFXPoolType(poolType: string | undefined): boolean {
+  if (!poolType) return false;
+  return poolType === "FX";
+}

@@ -37,7 +37,7 @@ export const getPoolTokens = createEffect(
     name: "v2GetPoolTokens",
     input: S.schema({ vaultAddress: S.string, poolId: S.string, chainId: S.number }),
     output: S.schema({ tokens: S.array(S.string), balances: S.array(S.string) }),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {

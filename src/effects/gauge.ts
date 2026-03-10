@@ -193,7 +193,7 @@ export const getGaugeRelativeWeightCap = createEffect(
     name: "getGaugeRelativeWeightCap",
     input: S.schema({ address: S.string, chainId: S.number }),
     output: S.union([S.string, null]),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {

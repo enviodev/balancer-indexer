@@ -36,6 +36,7 @@ import {
   getLBPV3Params,
   getFixedLBPParams,
   getReClammParams,
+  getQuantAMMParams,
 } from "../../effects/v3Pool.js";
 
 // Helper: ensure factory exists
@@ -208,27 +209,48 @@ V3QuantAMMWeightedPoolFactory.PoolCreated.handler(async ({ event, context }) => 
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "QuantAMMWeighted", 1);
 
-  // QuantAMM params require many RPC calls — store with minimal data for now
-  // Full QuantAMM param fetching would be added with a dedicated effect
+  const data = await context.effect(getQuantAMMParams, { address: poolAddress, chainId });
+
   const paramsId = makeChainId(chainId, poolAddress);
-  context.V3QuantAMMWeightedParams.set({
-    id: paramsId,
-    oracleStalenessThreshold: 0n,
-    poolRegistry: 0n,
-    lambda: [],
-    epsilonMax: 0n,
-    absoluteWeightGuardRail: 0n,
-    maxTradeSizeRatio: 0n,
-    updateInterval: 0n,
-    weightsAtLastUpdateInterval: [],
-    weightBlockMultipliers: [],
-    lastUpdateIntervalTime: 0n,
-    lastInterpolationTimePossible: 0n,
-    runner: "",
-    rule: "",
-    gradientIntermediates: [],
-    movingAverageIntermediates: [],
-  });
+  if (data) {
+    context.V3QuantAMMWeightedParams.set({
+      id: paramsId,
+      oracleStalenessThreshold: BigInt(data.oracleStalenessThreshold),
+      poolRegistry: BigInt(data.poolRegistry),
+      lambda: data.lambda.map(v => BigInt(v)),
+      epsilonMax: BigInt(data.epsilonMax),
+      absoluteWeightGuardRail: BigInt(data.absoluteWeightGuardRail),
+      maxTradeSizeRatio: BigInt(data.maxTradeSizeRatio),
+      updateInterval: BigInt(data.updateInterval),
+      weightsAtLastUpdateInterval: data.weightsAtLastUpdateInterval.map(v => BigInt(v)),
+      weightBlockMultipliers: data.weightBlockMultipliers.map(v => BigInt(v)),
+      lastUpdateIntervalTime: BigInt(data.lastUpdateIntervalTime),
+      lastInterpolationTimePossible: BigInt(data.lastInterpolationTimePossible),
+      runner: data.runner,
+      rule: data.rule,
+      gradientIntermediates: [],
+      movingAverageIntermediates: [],
+    });
+  } else {
+    context.V3QuantAMMWeightedParams.set({
+      id: paramsId,
+      oracleStalenessThreshold: 0n,
+      poolRegistry: 0n,
+      lambda: [],
+      epsilonMax: 0n,
+      absoluteWeightGuardRail: 0n,
+      maxTradeSizeRatio: 0n,
+      updateInterval: 0n,
+      weightsAtLastUpdateInterval: [],
+      weightBlockMultipliers: [],
+      lastUpdateIntervalTime: 0n,
+      lastInterpolationTimePossible: 0n,
+      runner: "",
+      rule: "",
+      gradientIntermediates: [],
+      movingAverageIntermediates: [],
+    });
+  }
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { quantAMMWeightedParams_id: paramsId });
 });
 

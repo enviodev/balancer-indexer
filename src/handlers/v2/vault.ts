@@ -12,6 +12,7 @@ import {
 } from "../../utils/v2/entities.js";
 import {
   swapValueInUSD,
+  valueInUSD,
   isPricingAsset,
   getPreferentialPricingAsset,
   getLatestPriceId,
@@ -19,6 +20,9 @@ import {
   addHistoricalPoolLiquidityRecord,
   updatePoolLiquidity,
 } from "../../utils/v2/pricing.js";
+import { isVariableWeightPool, isFXPoolType, isLinearPoolType } from "../../utils/v2/pools.js";
+import { getWeights } from "../../effects/v2Pool.js";
+import { USDC_ADDRESS } from "../../utils/v2/assets.js";
 
 const DAY = 24 * 60 * 60;
 
@@ -34,7 +38,7 @@ V2Vault.Swap.handler(async ({ event, context }) => {
   const tokenInAddress = event.params.tokenIn.toLowerCase();
   const tokenOutAddress = event.params.tokenOut.toLowerCase();
 
-  const pool = await context.V2Pool.get(poolEntityId);
+  let pool = await context.V2Pool.get(poolEntityId);
   if (!pool) return;
 
   // Ensure user exists
@@ -55,8 +59,34 @@ V2Vault.Swap.handler(async ({ event, context }) => {
   const tokenAmountIn = tokenToDecimal(event.params.amountIn, poolTokenIn.decimals);
   const tokenAmountOut = tokenToDecimal(event.params.amountOut, poolTokenOut.decimals);
 
-  // Estimate swap fee from pool's fee percentage
-  const swapFeeAmount = tokenAmountIn.times(pool.swapFee);
+  // Variable weight pool updates (LBP/Investment/Managed) — weights change over time
+  if (isVariableWeightPool(pool.poolType)) {
+    const weights = await context.effect(getWeights, {
+      address: poolAddress,
+      chainId,
+    });
+    if (weights.length > 0) {
+      const tokensList = pool.tokensList ?? [];
+      // Filter out BPT from the token list (for Managed pools)
+      const nonBptTokens = tokensList.filter((t: string) => t.toLowerCase() !== poolAddress);
+      if (weights.length === nonBptTokens.length) {
+        let totalWeight = ZERO_BD;
+        for (let i = 0; i < nonBptTokens.length; i++) {
+          const tokenAddr = nonBptTokens[i]!.toLowerCase();
+          const weight = scaleDown(BigInt(weights[i]!), 18);
+          totalWeight = totalWeight.plus(weight);
+
+          const ptId = v2PoolTokenId(chainId, poolAddress, tokenAddr);
+          const pt = await context.V2PoolToken.get(ptId);
+          if (pt) {
+            context.V2PoolToken.set({ ...pt, weight });
+          }
+        }
+        // Update pool totalWeight (will be merged with other pool updates below)
+        pool = { ...pool, totalWeight };
+      }
+    }
+  }
 
   // Calculate swap value in USD
   const swapValue = await swapValueInUSD(
@@ -67,6 +97,44 @@ V2Vault.Swap.handler(async ({ event, context }) => {
     chainId,
     context,
   );
+
+  // Determine if this is a join/exit swap (BPT is one of the tokens)
+  const isJoinExitSwap = poolAddress === tokenInAddress || poolAddress === tokenOutAddress;
+
+  // Calculate swap fees
+  let swapFeesUSD = ZERO_BD;
+  if (!isJoinExitSwap) {
+    if (!isLinearPoolType(pool.poolType ?? "") && !isFXPoolType(pool.poolType)) {
+      // Standard fee calculation
+      swapFeesUSD = swapValue.times(pool.swapFee);
+    } else if (isFXPoolType(pool.poolType)) {
+      // FX pool custom fee calculation using latestFXPrice
+      const usdcAddr = USDC_ADDRESS[chainId];
+      const isTokenInBase = usdcAddr ? tokenOutAddress === usdcAddr : false;
+      const baseTokenAddr = isTokenInBase ? tokenInAddress : tokenOutAddress;
+      const quoteTokenAddr = isTokenInBase ? tokenOutAddress : tokenInAddress;
+
+      const baseTokenId = makeChainId(chainId, baseTokenAddr);
+      const quoteTokenId = makeChainId(chainId, quoteTokenAddr);
+      const baseToken = await context.Token.get(baseTokenId);
+      const quoteToken = await context.Token.get(quoteTokenId);
+
+      const baseRate = baseToken?.latestFXPrice;
+      const quoteRate = quoteToken?.latestFXPrice;
+
+      if (baseRate && quoteRate) {
+        if (isTokenInBase) {
+          swapFeesUSD = tokenAmountIn.times(baseRate).minus(tokenAmountOut.times(quoteRate));
+        } else {
+          swapFeesUSD = tokenAmountIn.times(quoteRate).minus(tokenAmountOut.times(baseRate));
+        }
+        // Fees should not be negative
+        if (swapFeesUSD.lt(ZERO_BD)) {
+          swapFeesUSD = ZERO_BD;
+        }
+      }
+    }
+  }
 
   // Update pool token balances
   context.V2PoolToken.set({
@@ -82,8 +150,8 @@ V2Vault.Swap.handler(async ({ event, context }) => {
   context.V2Pool.set({
     ...pool,
     swapsCount: pool.swapsCount + 1n,
-    totalSwapVolume: pool.totalSwapVolume.plus(swapValue),
-    totalSwapFee: pool.totalSwapFee.plus(swapFeeAmount),
+    totalSwapVolume: pool.totalSwapVolume.plus(isJoinExitSwap ? ZERO_BD : swapValue),
+    totalSwapFee: pool.totalSwapFee.plus(swapFeesUSD),
   });
 
   // Create V2Swap entity
@@ -111,12 +179,36 @@ V2Vault.Swap.handler(async ({ event, context }) => {
   if (!vault) {
     vault = defaultV2Balancer(chainId, V2_VAULT_ADDRESS);
   }
+  const swapVolumeForMetrics = isJoinExitSwap ? ZERO_BD : swapValue;
   context.V2Balancer.set({
     ...vault,
     totalSwapCount: vault.totalSwapCount + 1n,
-    totalSwapVolume: vault.totalSwapVolume.plus(swapValue),
-    totalSwapFee: vault.totalSwapFee.plus(swapFeeAmount),
+    totalSwapVolume: vault.totalSwapVolume.plus(swapVolumeForMetrics),
+    totalSwapFee: vault.totalSwapFee.plus(swapFeesUSD),
   });
+
+  // === Trade Pair tracking ===
+  if (!isJoinExitSwap) {
+    const tradePairResult = await getOrCreateTradePair(
+      chainId, tokenInAddress, tokenOutAddress, context,
+    );
+    const updatedPair = {
+      ...tradePairResult,
+      totalSwapVolume: tradePairResult.totalSwapVolume.plus(swapVolumeForMetrics),
+      totalSwapFee: tradePairResult.totalSwapFee.plus(swapFeesUSD),
+    };
+    context.V2TradePair.set(updatedPair);
+
+    // Trade pair snapshot
+    const tradePairSnapshot = await getOrCreateTradePairSnapshot(
+      updatedPair.id, event.block.timestamp, context,
+    );
+    context.V2TradePairSnapshot.set({
+      ...tradePairSnapshot,
+      totalSwapVolume: updatedPair.totalSwapVolume,
+      totalSwapFee: updatedPair.totalSwapFee,
+    });
+  }
 
   // === Pricing: update token prices from swap ===
 
@@ -232,6 +324,19 @@ V2Vault.PoolBalanceChanged.handler(async ({ event, context }) => {
     }
   }
 
+  // Calculate valueUSD from token amounts
+  let joinExitValueUSD = ZERO_BD;
+  for (let i = 0; i < tokens.length; i++) {
+    const tokenAddress = tokens[i]!.toLowerCase();
+    const poolTokenId = v2PoolTokenId(chainId, poolAddress, tokenAddress);
+    const poolToken = await context.V2PoolToken.get(poolTokenId);
+    const decimals = poolToken?.decimals ?? 18;
+    const delta = deltas[i]!;
+    const absAmount = tokenToDecimal(delta < 0n ? -delta : delta, decimals);
+    const tokenValueUSD = await valueInUSD(absAmount, tokenAddress, chainId, context);
+    joinExitValueUSD = joinExitValueUSD.plus(tokenValueUSD);
+  }
+
   // Create V2JoinExit entity
   const joinExitId = `${chainId}_${event.block.number}_${event.logIndex}`;
   context.V2JoinExit.set({
@@ -239,7 +344,7 @@ V2Vault.PoolBalanceChanged.handler(async ({ event, context }) => {
     type: isJoin ? "Join" : "Exit",
     sender: lpAddress,
     amounts,
-    valueUSD: ZERO_BD,
+    valueUSD: joinExitValueUSD,
     pool_id: poolEntityId,
     user_id: userId,
     timestamp: event.block.timestamp,
@@ -376,4 +481,58 @@ async function updateV2BalancerSnapshot(
     totalSwapFee: vault.totalSwapFee,
     totalProtocolFee: vault.totalProtocolFee,
   });
+}
+
+/**
+ * Get or create a V2TradePair entity. Token addresses are sorted
+ * to ensure a canonical pair ID regardless of swap direction.
+ */
+async function getOrCreateTradePair(
+  chainId: number,
+  token0Address: string,
+  token1Address: string,
+  context: any,
+) {
+  const sorted = [token0Address, token1Address].sort();
+  const tradePairId = `${chainId}-${sorted[0]}-${sorted[1]}`;
+
+  let tradePair = await context.V2TradePair.get(tradePairId);
+  if (!tradePair) {
+    const token0Id = makeChainId(chainId, sorted[0]!);
+    const token1Id = makeChainId(chainId, sorted[1]!);
+    tradePair = {
+      id: tradePairId,
+      token0_id: token0Id,
+      token1_id: token1Id,
+      totalSwapVolume: ZERO_BD,
+      totalSwapFee: ZERO_BD,
+    };
+  }
+  return tradePair;
+}
+
+/**
+ * Get or create a V2TradePairSnapshot for a given day.
+ */
+async function getOrCreateTradePairSnapshot(
+  tradePairId: string,
+  timestamp: number,
+  context: any,
+) {
+  const dayID = Math.floor(timestamp / 86400);
+  const dayTimestamp = dayID * 86400;
+  const snapshotId = `${tradePairId}-${dayID}`;
+
+  let snapshot = await context.V2TradePairSnapshot.get(snapshotId);
+  if (!snapshot) {
+    const tradePair = await context.V2TradePair.get(tradePairId);
+    snapshot = {
+      id: snapshotId,
+      pair_id: tradePairId,
+      timestamp: dayTimestamp,
+      totalSwapVolume: tradePair ? tradePair.totalSwapVolume : ZERO_BD,
+      totalSwapFee: tradePair ? tradePair.totalSwapFee : ZERO_BD,
+    };
+  }
+  return snapshot;
 }

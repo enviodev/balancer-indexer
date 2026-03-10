@@ -67,9 +67,12 @@ function seedMockDb() {
     priceRate: new BigDecimal("1"),
     weight: new BigDecimal("0.5"),
     isExemptFromYieldProtocolFee: undefined,
-    cashBalance: undefined,
-    managedBalance: undefined,
+    cashBalance: ZERO_BD,
+    managedBalance: ZERO_BD,
     oldPriceRate: undefined,
+    assetManager: "",
+    paidProtocolFees: undefined,
+    circuitBreaker_id: undefined,
   });
 
   db = db.entities.V2PoolToken.set({
@@ -85,9 +88,12 @@ function seedMockDb() {
     priceRate: new BigDecimal("1"),
     weight: new BigDecimal("0.5"),
     isExemptFromYieldProtocolFee: undefined,
-    cashBalance: undefined,
-    managedBalance: undefined,
+    cashBalance: ZERO_BD,
+    managedBalance: ZERO_BD,
     oldPriceRate: undefined,
+    assetManager: "",
+    paidProtocolFees: undefined,
+    circuitBreaker_id: undefined,
   });
 
   // Seed Token entities
@@ -130,9 +136,12 @@ function seedMockDb() {
     priceRate: new BigDecimal("1"),
     weight: new BigDecimal("0.5"),
     isExemptFromYieldProtocolFee: undefined,
-    cashBalance: undefined,
-    managedBalance: undefined,
+    cashBalance: ZERO_BD,
+    managedBalance: ZERO_BD,
     oldPriceRate: undefined,
+    assetManager: "",
+    paidProtocolFees: undefined,
+    circuitBreaker_id: undefined,
   });
 
   db = db.entities.V2PoolToken.set({
@@ -148,9 +157,12 @@ function seedMockDb() {
     priceRate: new BigDecimal("1"),
     weight: new BigDecimal("0.5"),
     isExemptFromYieldProtocolFee: undefined,
-    cashBalance: undefined,
-    managedBalance: undefined,
+    cashBalance: ZERO_BD,
+    managedBalance: ZERO_BD,
     oldPriceRate: undefined,
+    assetManager: "",
+    paidProtocolFees: undefined,
+    circuitBreaker_id: undefined,
   });
 
   db = db.entities.Token.set({

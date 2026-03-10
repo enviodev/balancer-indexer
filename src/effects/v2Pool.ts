@@ -34,6 +34,10 @@ const GYRO2_ABI = parseAbi([
   "function getSqrtParameters() view returns (uint256[] sqrtParameters)",
 ]);
 
+const LINEAR_RATE_ABI = parseAbi([
+  "function getWrappedTokenRate() view returns (uint256)",
+]);
+
 const GYROE_ABI = parseAbi([
   "function getECLPParams() view returns ((uint256 alpha, uint256 beta, uint256 c, uint256 s, uint256 lambda) params, (int256 tauAlpha_x, int256 tauAlpha_y, int256 tauBeta_x, int256 tauBeta_y, int256 u, int256 v, int256 w, int256 z, int256 dSq) derived)",
 ]);
@@ -254,6 +258,29 @@ export const getGyroEParams = createEffect(
         z: derived.z.toString(),
         dSq: derived.dSq.toString(),
       };
+    } catch {
+      return null;
+    }
+  }
+);
+
+export const getWrappedTokenRate = createEffect(
+  {
+    name: "v2GetWrappedTokenRate",
+    input: S.schema({ address: S.string, chainId: S.number }),
+    output: S.union([S.string, null]),
+    cache: true,
+    rateLimit: false,
+  },
+  async ({ input }) => {
+    const client = getEffectClient(input.chainId);
+    try {
+      const result = await client.readContract({
+        address: input.address as `0x${string}`,
+        abi: LINEAR_RATE_ABI,
+        functionName: "getWrappedTokenRate",
+      });
+      return (result as bigint).toString();
     } catch {
       return null;
     }

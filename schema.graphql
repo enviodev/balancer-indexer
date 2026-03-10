@@ -850,6 +850,11 @@ type GaugeVote {
   timestamp: BigInt
 }
 
+type GaugeLookup {
+  id: ID! # ${chainId}-${gaugeAddress} — maps gauge address to full Gauge entity ID
+  gaugeId: String!
+}
+
 type GaugeInjector {
   id: ID!
 }

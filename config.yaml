@@ -95,6 +95,9 @@ contracts:
   - name: V3StableSurgeHookV2
     events:
       - event: "StableSurgeHookRegistered(address indexed pool, address indexed factory)"
+  - name: V3StableSurgeHookV3
+    events:
+      - event: "StableSurgeHookRegistered(address indexed pool, address indexed factory)"
 
   # ===== V3 ReClamm Pool (dynamic) =====
   - name: V3ReClammPool
@@ -139,6 +142,20 @@ contracts:
       - event: "TargetsSet(address indexed token, uint256 lowerTarget, uint256 upperTarget)"
       - event: "PausedLocally()"
       - event: "UnpausedLocally()"
+      - event: "PriceRateProviderSet(address indexed token, address indexed provider, uint256 cacheDuration)"
+      - event: "PriceRateCacheUpdated(address indexed token, uint256 rate)"
+      - event: "TokenRateProviderSet(uint256 indexed tokenIndex, address indexed provider, uint256 cacheDuration)"
+      - event: "TokenRateCacheUpdated(uint256 indexed tokenIndex, uint256 rate)"
+      - event: "MustAllowlistLPsSet(bool mustAllowlistLPs)"
+      - event: "JoinExitEnabledSet(bool joinExitEnabled)"
+      - event: "CircuitBreakerSet(address indexed token, uint256 bptPrice, uint256 lowerBoundPercentage, uint256 upperBoundPercentage)"
+      - event: "TokenAdded(address indexed token, uint256 normalizedWeight)"
+      - event: "TokenRemoved(address indexed token)"
+      - event: "ManagementAumFeeCollected(uint256 bptAmount)"
+      - event: "ManagementFeePercentageChanged(uint256 managementFeePercentage)"
+      - event: "ManagementAumFeePercentageChanged(uint256 managementAumFeePercentage)"
+      - event: "GradualSwapFeeUpdateScheduled(uint256 startTime, uint256 endTime, uint256 startSwapFeePercentage, uint256 endSwapFeePercentage)"
+      - event: "ParametersSet(uint256 alpha, uint256 beta, uint256 delta, uint256 epsilon, uint256 lambda)"
 
   # ===== V2 Protocol ID Registry =====
   - name: V2ProtocolIdRegistry
