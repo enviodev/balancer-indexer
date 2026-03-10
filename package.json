@@ -14,6 +14,7 @@
     "vitest": "4.0.18"
   },
   "dependencies": {
+    "bignumber.js": "^10.0.2",
     "envio": "3.0.0-alpha.17",
     "viem": "^2.47.0"
   },
