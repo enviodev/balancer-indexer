@@ -1117,3 +1117,210 @@ chains:
       - name: GaugeRewardsOnlyGauge
       - name: GaugeChildChainStreamer
       - name: GaugeInjectorContract
+
+  # ===== Polygon zkEVM =====
+  - id: 1101
+    start_block: 0
+    contracts:
+      - name: V2Vault
+        address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"
+        start_block: 203079
+      - name: V2EventEmitter
+        address: "0x16e29e62cC00fCBa1234C7ad89BD731427c8D9aF"
+        start_block: 281361
+      - name: V2PoolFactory
+        address:
+          - "0x03F3Fb107e74F2EAC9358862E91ad3c692712054"
+          - "0x8eA89804145c007e7D226001A96955ad53836087"
+          - "0x956CCab09898C0AF2aCa5e6C229c3aD4E93d9288"
+          - "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+          - "0x577e5993B9Cc480F07F98B5Ebd055604bd9071C4"
+          - "0x4b7b369989e613ff2C65768B7Cf930cC927F901E"
+          - "0x6B1Da720Be2D11d95177ccFc40A917c2688f396c"
+          - "0x687b8C9b41E01Be8B591725fac5d5f52D0564d79"
+          - "0x44d33798dddCdAbc93Fe6a40C80588033Dc502d3"
+          - "0x3B1eb8EB7b43882b385aB30533D9A2BeF9052a98"
+          - "0xaf779e58dafb4307b998C7b3C9D3f788DFc80632"
+          - "0x5D56EA1B2595d2dbe4f5014b967c78ce75324f0c"
+        start_block: 203079
+      - name: V2Pool
+      # Gauge contracts
+      - name: GaugeAuthorizerAdaptor
+        address: "0xb9aD3466cdd42015cc05d4804DC68D562b6a2065"
+        start_block: 203624
+      - name: OmniVotingEscrowChild
+        address: "0xE241C6e48CA045C7f631600a0f1403b2bFea05ad"
+        start_block: 394609
+      - name: ChildChainGaugeV2Factory
+        address: "0x2498A2B0d6462d2260EAC50aE1C3e03F4829BA95"
+        start_block: 203653
+      - name: GaugeLiquidityGauge
+      - name: GaugeRewardsOnlyGauge
+      - name: GaugeChildChainStreamer
+      - name: GaugeInjectorContract
+
+  # ===== HyperEVM =====
+  - id: 999
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 6132445
+      - name: V3ProtocolFeeController
+        address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+        start_block: 6132384
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xE3881627B8DeeBCCF9c23B291430a549Fc0bE5F7"
+        start_block: 6200033
+      - name: V3WeightedPoolV2Factory
+        address: "0x6eE18fbb1BBcC5CF700cD75ea1aef2bb21e3cB3F"
+        start_block: 24746962
+      - name: V3StablePoolV2Factory
+        address: "0x96484f2aBF5e58b15176dbF1A799627B53F13B6d"
+        start_block: 6204791
+      - name: V3StablePoolV3Factory
+        address: "0xb96524227c4B5Ab908FC3d42005FE3B07abA40E9"
+        start_block: 24749890
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c"
+        start_block: 6202900
+      - name: V3GyroECLPPoolFactory
+        address: "0x6817149cb753BF529565B4D023d7507eD2ff4Bc0"
+        start_block: 6203205
+      - name: V3LBPoolFactory
+        address: "0x013d4382f291be5688afbcc741ee8a24c66b2c92"
+        start_block: 6204547
+      - name: V3LBPoolV2Factory
+        address: "0xa1D0791a41318c775707C56eAe247AF81a05322C"
+        start_block: 13411815
+      - name: V3LBPoolV3Factory
+        address: "0xd22eecBB495380Ef52b1CCeF1cA594979885D484"
+        start_block: 22289198
+      - name: V3FixedPriceLBPoolFactory
+        address: "0xAE563E3f8219521950555F5962419C8919758Ea2"
+        start_block: 22620097
+      - name: V3ReClammPoolFactory
+        address: "0x25EA7b202CD8447e8E6F4A7C59b19C66DfEf1925"
+        start_block: 6205279
+      - name: V3ReClammPoolV2Factory
+        address: "0x4BB42f71CAB7Bd13e9f958dA4351B9fa2d3A42FF"
+        start_block: 7341537
+      - name: V3StableSurgeHookV2
+        address: "0x5DbAd78818D4c8958EfF2d5b95b28385A22113Cd"
+        start_block: 6204913
+
+  # ===== Plasma =====
+  - id: 9745
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 780207
+      - name: V3ProtocolFeeController
+        address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+        start_block: 780201
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xf23b4DB826DbA14c0e857029dfF076b1c0264843"
+        start_block: 782589
+      - name: V3WeightedPoolV2Factory
+        address: "0x86705Ee19c0509Ff68F1118C55ee2ebdE383D122"
+        start_block: 11664775
+      - name: V3StablePoolV2Factory
+        address: "0x81cFAE226343B24BA12EC6521Db2C79E7aeeb310"
+        start_block: 783595
+      - name: V3StablePoolV3Factory
+        address: "0x65A22Ec32c37835Ad5E77Eb6f7452Ac59E113a9F"
+        start_block: 11667596
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x9dd5Db2d38b50bEF682cE532bCca5DfD203915E1"
+        start_block: 782862
+      - name: V3GyroECLPPoolFactory
+        address: "0xE3881627B8DeeBCCF9c23B291430a549Fc0bE5F7"
+        start_block: 783147
+      - name: V3LBPoolV2Factory
+        address: "0x0f08eEf2C785AA5e7539684aF04755dEC1347b7c"
+        start_block: 1798303
+      - name: V3LBPoolV3Factory
+        address: "0x3BEb058DE1A25dd24223fd9e1796df8589429AcE"
+        start_block: 9246669
+      - name: V3FixedPriceLBPoolFactory
+        address: "0xEAedc32a51c510d35ebC11088fD5fF2b47aACF2E"
+        start_block: 9572537
+      - name: V3ReClammPoolV2Factory
+        address: "0x662112B8CB18889e81459b92CA0f894a2ef2c1B8"
+        start_block: 784770
+      - name: V3StableSurgeHookV2
+        address: "0x6817149cb753BF529565B4D023d7507eD2ff4Bc0"
+        start_block: 783858
+
+  # ===== Monad =====
+  - id: 143
+    start_block: 0
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 22091249
+      - name: V3ProtocolFeeController
+        address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+        start_block: 22091229
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolV2Factory
+        address: "0x4bdCc2fb18AEb9e2d281b0278D946445070EAda7"
+        start_block: 49154738
+      - name: V3StablePoolV3Factory
+        address: "0xf5CDdF6feD9C589f1Be04899F48f9738531daD59"
+        start_block: 49161857
+      - name: V3Gyro2CLPPoolFactory
+        address: "0x9805dcfD25e6De36bad8fe9D3Fe2c9b44B764102"
+        start_block: 48705473
+      - name: V3GyroECLPPoolFactory
+        address: "0xE3881627B8DeeBCCF9c23B291430a549Fc0bE5F7"
+        start_block: 48705590
+      - name: V3ReClammPoolV2Factory
+        address: "0x96484f2aBF5e58b15176dbF1A799627B53F13B6d"
+        start_block: 48707240
+      - name: V3StableSurgeHookV2
+        address: "0x6817149cb753BF529565B4D023d7507eD2ff4Bc0"
+        start_block: 48705989
+
+  # ===== X-Layer (commented out — not yet supported by HyperSync) =====
+  # - id: 196
+  #   start_block: 0
+  #   contracts:
+  #     - name: V3Vault
+  #       address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+  #       start_block: 43082760
+  #     - name: V3ProtocolFeeController
+  #       address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+  #       start_block: 43082746
+  #     - name: V3BPT
+  #     - name: V3ReClammPool
+  #     - name: V3WeightedPoolFactory
+  #       address: "0xf23b4db826dba14c0e857029dff076b1c0264843"
+  #       start_block: 43083284
+  #     - name: V3WeightedPoolV2Factory
+  #       address: "0x25EA7b202CD8447e8E6F4A7C59b19C66DfEf1925"
+  #       start_block: 49826470
+  #     - name: V3StablePoolV2Factory
+  #       address: "0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c"
+  #       start_block: 43083706
+  #     - name: V3StablePoolV3Factory
+  #       address: "0x1702067424096F07A60e62cceE3dE9420068492D"
+  #       start_block: 49829278
+  #     - name: V3Gyro2CLPPoolFactory
+  #       address: "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
+  #       start_block: 43083343
+  #     - name: V3GyroECLPPoolFactory
+  #       address: "0x5cF4928a3205728bd12830E1840F7DB85c62a4B9"
+  #       start_block: 43083438
+  #     - name: V3ReClammPoolV2Factory
+  #       address: "0x013D4382F291be5688AFBcc741Ee8A24C66B2C92"
+  #       start_block: 43084003
+  #     - name: V3StableSurgeHookV2
+  #       address: "0xa523f47a933d5020b23629ddf689695aa94612dc"
+  #       start_block: 43083767

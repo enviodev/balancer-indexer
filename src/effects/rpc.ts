@@ -3,7 +3,7 @@
  * contract reads through dRPC (https://lb.drpc.live/{chain}/{key}).
  */
 import { createPublicClient, http, type PublicClient, type Chain, type Transport } from "viem";
-import { mainnet, gnosis, arbitrum, base, optimism, avalanche, polygon, sepolia } from "viem/chains";
+import { mainnet, gnosis, arbitrum, base, optimism, avalanche, polygon, sepolia, polygonZkEvm, hyperEvm, plasma, monad } from "viem/chains";
 
 const chainMap: Record<number, Chain> = {
   1: mainnet,
@@ -14,6 +14,10 @@ const chainMap: Record<number, Chain> = {
   43114: avalanche,
   137: polygon,
   11155111: sepolia,
+  1101: polygonZkEvm,
+  999: hyperEvm,
+  9745: plasma,
+  143: monad,
 };
 
 /** dRPC chain name by chain ID */
@@ -27,6 +31,10 @@ const drpcChainNames: Record<number, string> = {
   137: "polygon",
   11155111: "sepolia",
   146: "sonic",
+  1101: "polygon-zkevm",
+  999: "hyperliquid",
+  9745: "plasma",
+  143: "monad",
 };
 
 function getRpcUrl(chainId: number): string | undefined {
