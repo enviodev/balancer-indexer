@@ -1,0 +1,191 @@
+id	output
+{"address":"0x8A819a4caBD6EfCb4E5504fE8679A1aBD831Dd8f","chainId":100}	\N
+{"address":"0x0503Dd6b2D3Dd463c9BeF67fB5156870Af63393E","chainId":100}	\N
+{"address":"0x11884dA90FB4221b3aa288a7741C51eC4Fc43B2f","chainId":100}	\N
+{"address":"0xa94A92fC2cA0601481d5DE357489ceaEBa1C1Dc6","chainId":100}	\N
+{"address":"0xBEa652AA29D38114e9D36F2A2E4167b13DF68e73","chainId":100}	\N
+{"address":"0x581Ec1f5e7CeD12B186deaE32256AdB53BDd5B08","chainId":100}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x225E0047671939A8d78e08EBd692788Abe63f15c","chainId":100}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xE7f88d7d4EF2eb18FCF9Dd7216BA7Da1c46f3dD6","chainId":100}	{"mainIndex": 2, "lowerTarget": "100000000000000000000000", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0x41211BBa6d37F5a74b22e667533F080C7C7f3F13","chainId":100}	{"mainIndex": 2, "lowerTarget": "100000000000000000000000", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0xFFFf76A3280e95dC855696111C2562Da09db2Ac0","chainId":100}	{"mainIndex": 1, "lowerTarget": "2000000000000000000000", "upperTarget": "8000000000000000000000", "wrappedIndex": 2}
+{"address":"0xd4015683b8153666190e0B2bEC352580EBC4CaCa","chainId":100}	{"mainIndex": 2, "lowerTarget": "1000000000000000000", "upperTarget": "3000000000000000000", "wrappedIndex": 1}
+{"address":"0xbb9Cd48d33033F5EfFBeDec9Dd700C7D7E1dCF50","chainId":100}	{"mainIndex": 2, "lowerTarget": "100000000000000000000", "upperTarget": "500000000000000000000", "wrappedIndex": 1}
+{"address":"0xd16f72b02dA5f51231fDe542A8B9E2777a478c88","chainId":100}	{"mainIndex": 2, "lowerTarget": "100000000000000000000000", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0xA826a114B0c7dB4d1FF4a4BE845a78998c64564C","chainId":43114}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xEd3E2F496cbCd8e212192fb8D1499842f04A0D19","chainId":43114}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xEb496161099D45B3ea4892408ef745c6182eB56e","chainId":43114}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xeA67626E1f0b59e0d172a04F5702ef90BcdF440C","chainId":43114}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x7275c131b1F67e8B53b4691F92B0E35A4c1C6e22","chainId":43114}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x9BF7c3b63c77b4B4F2717776F15A4bec1b532a28","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 0}
+{"address":"0x23Ca0306B21ea71552B148cf3c4db4Fc85AE1929","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd","chainId":42161}	\N
+{"address":"0x2d011aDf89f0576C9B722c28269FcB5D50C2d179","chainId":42161}	\N
+{"address":"0x178E029173417b1F9C8bC16DCeC6f697bC323746","chainId":42161}	\N
+{"address":"0x13F2f70A951FB99d48ede6E25B0bdF06914db33F","chainId":42161}	\N
+{"address":"0x5D8955a2068EE6d1F7aB17640301219afa4B526f","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xF93579002DBE8046c43FEfE86ec78b1112247BB8","chainId":42161}	\N
+{"address":"0xa612B6AeD2E7ca1A3a4f23FbcA9128461bBB7718","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x1AC55C31DaC78ca943CB8ebfCa5945ce09e036e2","chainId":100}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xA3823e50f20982656557A4A6a9C06Ba5467aE908","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 0}
+{"address":"0x652D486B80C461C397B0d95612A404da936f3db3","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "2100000000000000000000000", "wrappedIndex": 2}
+{"address":"0xe6bCC79f328eec93D4Ec8F7ED35534d9AB549faA","chainId":1}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x804CdB9116a10bB78768D3252355a1b18067bF8f","chainId":1}	{"mainIndex": 1, "lowerTarget": "2900000000000000000000000", "upperTarget": "10000000000000000000000000", "wrappedIndex": 0}
+{"address":"0x9210F1204b5a24742Eba12f710636D76240dF3d0","chainId":1}	{"mainIndex": 1, "lowerTarget": "2900000000000000000000000", "upperTarget": "10000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x2BBf681cC4eb09218BEe85EA2a5d3D13Fa40fC0C","chainId":1}	{"mainIndex": 1, "lowerTarget": "2900000000000000000000000", "upperTarget": "10000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x88D07558470484c03d3bb44c3ECc36CAfCF43253","chainId":10}	{"mainIndex": 0, "lowerTarget": "100000000000000000000000", "upperTarget": "200000000000000000000000", "wrappedIndex": 2}
+{"address":"0xFBf87D2C22d1d298298ab5b0Ec957583a2731d15","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 0}
+{"address":"0xf984eb2B8a7eF780245a797A2fCcd82f346409ca","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xe1Fb90D0d3b47E551d494d7eBe8f209753526B01","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "30000000000000000000000", "wrappedIndex": 1}
+{"address":"0x894c82800526E0391E709c0983a5AeA3718b7F6D","chainId":42161}	{"mainIndex": 2, "lowerTarget": "100000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 1}
+{"address":"0x5BAe72B75CaAb1f260D21BC028c630140607D6e8","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "50000000000000000000000", "wrappedIndex": 1}
+{"address":"0xAeF2c171dBE64B0C18977E16e70BFD29d4eE0256","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x11884dA90FB4221b3aa288a7741C51eC4Fc43B2f","chainId":42161}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x284EB68520C8fA83361C1A3a5910aEC7f873C18b","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "50000000000000000000000", "wrappedIndex": 1}
+{"address":"0x117a3d474976274B37B7b94aF5DcAde5c90C6e85","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "50000000000000000000000", "wrappedIndex": 1}
+{"address":"0xae646817e458C0bE890b81e8d880206710E3c44e","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "1000000000000000000", "wrappedIndex": 1}
+{"address":"0x1aAFc31091d93C3Ff003Cff5D2d8f7bA2e728425","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 2}
+{"address":"0xCB21A9E647C95127ED784626485B3104Cb28d0e7","chainId":137}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0xB878eCCe26838Fbba4F78Cb5B791A0e09152C067","chainId":137}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0x6933ec1CA55C06a894107860c92aCdFd2Dd8512f","chainId":137}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0x8A819a4caBD6EfCb4E5504fE8679A1aBD831Dd8f","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 0}
+{"address":"0x0503Dd6b2D3Dd463c9BeF67fB5156870Af63393E","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 2}
+{"address":"0xDa1CD1711743e57Dd57102E9e61b75f3587703da","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "2000000000000000000000", "wrappedIndex": 1}
+{"address":"0x7c82A23B4C48D796dee36A9cA215b641C6a8709d","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "111000000000000000000000", "wrappedIndex": 1}
+{"address":"0x9E34631547aDcF2F8cefa0f5f223955C7B137571","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "111000000000000000000000", "wrappedIndex": 1}
+{"address":"0x52Cc8389C6B93d740325729Cc7c958066CEE4262","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x4739E50B59B552D490d3FDc60D200977A38510c0","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "111000000000000000000000", "wrappedIndex": 1}
+{"address":"0x3f53A862919ccFA023CB6AcE91378a79Fb0F6Bf5","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x19b1C92631405A0a9495ccbA0BeCF4f2e8e908bD","chainId":42161}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xc8C79fCD0e859e7eC81118e91cE8E4379A481ee6","chainId":1}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "5000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x8f4063446F5011bC1C9F79A819EFE87776F23704","chainId":1}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "5000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xb0F75E97A114A4EB4a425eDc48990e6760726709","chainId":1}	{"mainIndex": 0, "lowerTarget": "0", "upperTarget": "5000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xb5ad7d6d6F92a77F47f98C28C84893FBccc94809","chainId":10}	{"mainIndex": 2, "lowerTarget": "100000000000000000000000", "upperTarget": "200000000000000000000000", "wrappedIndex": 0}
+{"address":"0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd","chainId":1}	\N
+{"address":"0x2d011aDf89f0576C9B722c28269FcB5D50C2d179","chainId":1}	\N
+{"address":"0x178E029173417b1F9C8bC16DCeC6f697bC323746","chainId":1}	\N
+{"address":"0x13F2f70A951FB99d48ede6E25B0bdF06914db33F","chainId":1}	\N
+{"address":"0xF93579002DBE8046c43FEfE86ec78b1112247BB8","chainId":1}	\N
+{"address":"0x3dd0843A028C86e0b760b1A76929d1C5Ef93a2dd","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x178E029173417b1F9C8bC16DCeC6f697bC323746","chainId":137}	{"mainIndex": 1, "lowerTarget": "100000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 2}
+{"address":"0xF93579002DBE8046c43FEfE86ec78b1112247BB8","chainId":137}	{"mainIndex": 1, "lowerTarget": "100000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 0}
+{"address":"0xFf4ce5AAAb5a627bf82f4A571AB1cE94Aa365eA6","chainId":137}	{"mainIndex": 1, "lowerTarget": "100000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 0}
+{"address":"0x2F4eb100552ef93840d5aDC30560E5513DFfFACb","chainId":1}	{"mainIndex": 1, "lowerTarget": "6000000000000000000000000", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x3CdAE4f12A67ba563499e102f309c73213cB241c","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x82698aeCc9E28e9Bb27608Bd52cF57f704BD1B83","chainId":1}	{"mainIndex": 1, "lowerTarget": "6000000000000000000000000", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xae37D54Ae477268B9997d4161B96b8200755935c","chainId":1}	{"mainIndex": 1, "lowerTarget": "6000000000000000000000000", "upperTarget": "20000000000000000000000000", "wrappedIndex": 0}
+{"address":"0xaD28940024117B442a9EFB6D0f25C8B59e1c950B","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "2000000000000000000000", "wrappedIndex": 1}
+{"address":"0xc46be4B8Bb6B5A3d3120660efae9C5416318ED40","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xbD724Eb087d4cc0f61a5fED1fFFaF937937E14DE","chainId":42161}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x6CB787a419c3e6Ee2e9FF365856c29CD10659113","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xf3AeB3aBbA741f0EEcE8a1B1D2F11b85899951CB","chainId":1}	\N
+{"address":"0x40af308e3d07ec769D85EB80aFb116525fF4aC99","chainId":42161}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0x36942963e3b6F37eCC45a4e72349558514233F00","chainId":42161}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x5936497ffE0dBA0eF272D6301D65c0122862971A","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xc6057Da8673bE26378470A302628a07f70775F3A","chainId":43114}	\N
+{"address":"0xFf4ce5AAAb5a627bf82f4A571AB1cE94Aa365eA6","chainId":1}	\N
+{"address":"0xFA2C0bd8327C99db5bdE4c9e9E5cbF30946351bb","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x813E3fE1761f714c502d1d2d3a7CCEB33f37F59D","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x6a1eB2e9B45e772F55bd9a34659A04B6F75Da687","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "2100000000000000000000000", "wrappedIndex": 1}
+{"address":"0x454Ed96955d04D2f5cDD05E0Fd1C77975bFE5307","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "2100000000000000000000000", "wrappedIndex": 2}
+{"address":"0x384F67aA430376efc4f8987eaBf7F3f84eB9EA5d","chainId":1}	\N
+{"address":"0xf984eb2B8a7eF780245a797A2fCcd82f346409ca","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x961764651931941F23cea5bAB246607dC19ef224","chainId":1}	\N
+{"address":"0xb8b6fB4474d3Bf3b878a9dfC36115792358Db096","chainId":1}	\N
+{"address":"0xfeF969638C52899f91781f1Be594aF6f40B99BAd","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x331d50e0b00fc1C32742F151E56B9B616227E23E","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x3BB22Fc9033b802F2AC47c18885F63476F158aFC","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "2100000000000000000000000", "wrappedIndex": 2}
+{"address":"0xa8b103A10A94f4f2D7Ed2FdCd5545E8075573307","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xb1e42e90c5FA43956838F2290da567FEdbB28EdB","chainId":43114}	\N
+{"address":"0xe3F0B00Eb41395308120cc986286066725c6116E","chainId":43114}	\N
+{"address":"0x11884dA90FB4221b3aa288a7741C51eC4Fc43B2f","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x0320C1C5B6df19A194D48882aaEC1c72940081D9","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x126e7643235ec0ab9c103c507642dC3F4cA23C66","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "466000000000000000000000", "wrappedIndex": 2}
+{"address":"0xDEC02e6642e2c999aF429F5cE944653CAd15e093","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xD4e7C1F3DA1144c9E2CfD1b015eDA7652b4a4399","chainId":1}	{"mainIndex": 1, "lowerTarget": "2000000000000000000000000", "upperTarget": "10000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x3C640f0d3036Ad85Afa2D5A9E32bE651657B874F","chainId":1}	{"mainIndex": 2, "lowerTarget": "1000000000000000000000000", "upperTarget": "3500000000000000000000000", "wrappedIndex": 1}
+{"address":"0xeB486AF868AeB3b6e53066abc9623b1041b42bc0","chainId":1}	{"mainIndex": 1, "lowerTarget": "2000000000000000000000000", "upperTarget": "10000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xF71d0774B214c4cf51E33Eb3d30Ef98132e4DBaA","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x2FF1A9Dbdacd55297452cFD8a4d94724Bc22a5F7","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "12500000000000000000000", "wrappedIndex": 1}
+{"address":"0xbc0F2372008005471874e426e86CCFae7B4De79d","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "47000000000000000000000", "wrappedIndex": 2}
+{"address":"0xDbA274B4D04097b90A72b62467d828cEFD708037","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "30000000000000000000000", "wrappedIndex": 1}
+{"address":"0xe03aF00faBe8401560c1FF7d242d622a5b601573","chainId":1}	{"mainIndex": 1, "lowerTarget": "200000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 2}
+{"address":"0x4A82b580365Cff9B146281Ab72500957a849ABDC","chainId":1}	{"mainIndex": 1, "lowerTarget": "200000000000000000000000", "upperTarget": "500000000000000000000000", "wrappedIndex": 2}
+{"address":"0xD6E355036f41dC261B3f1ed3Bbc6003E87AAdB4f","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x0A0FB4ff697dE5ac5B6770CD8eE1B72AF80b57CF","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x9B1c8407a360443A9E5ECA004713E4088FAB8AC0","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x8E6eC57A822c2F527F2Df7C7D7D361dF3E7530a1","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xe1Fb90D0d3b47E551d494d7eBe8f209753526B01","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x894c82800526E0391E709c0983a5AeA3718b7F6D","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x5BAe72B75CaAb1f260D21BC028c630140607D6e8","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xAeF2c171dBE64B0C18977E16e70BFD29d4eE0256","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x284EB68520C8fA83361C1A3a5910aEC7f873C18b","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x117a3d474976274B37B7b94aF5DcAde5c90C6e85","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xae646817e458C0bE890b81e8d880206710E3c44e","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0xDa1CD1711743e57Dd57102E9e61b75f3587703da","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 2}
+{"address":"0x7c82A23B4C48D796dee36A9cA215b641C6a8709d","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "200000000000000000000000", "wrappedIndex": 1}
+{"address":"0x9E34631547aDcF2F8cefa0f5f223955C7B137571","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "25000000000000000000000", "wrappedIndex": 2}
+{"address":"0xF22ff21e17157340575158aD7394E068048dd98B","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x0AFBd58bEcA09545e4fb67772faf3858e610bcD0","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x52Cc8389C6B93d740325729Cc7c958066CEE4262","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "50000000000000000000000", "wrappedIndex": 2}
+{"address":"0x4739E50B59B552D490d3FDc60D200977A38510c0","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "50000000000000000000000", "wrappedIndex": 2}
+{"address":"0xFD11CCdBdb7AB91Cb9427A6d6BF570C95876d195","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xbFA413A2ff0F20456d57B643746133F54bFE0cd2","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xDc063deAfcE952160eC112FA382ac206305657e6","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x7337224D59CB16C2Dc6938CD45A7b2c60C865D6A","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "6324000000000000000000", "wrappedIndex": 1}
+{"address":"0x159cB00338fB63f263fd6f621Df619cEf71DA954","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "14426000000000000000000", "wrappedIndex": 2}
+{"address":"0x335d1709D4dA9aca59d16328db5Cd4eA66BFe06b","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10538000000000000000000", "wrappedIndex": 1}
+{"address":"0x4cE277Df0FeB5B4d07a0ca2ADCf5326E4005239d","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x9516a2d25958EdB8da246a320f2c7d94A0DBe25d","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x0d05Aac44aC7Dd3c7ba5d50Be93EB884A057d234","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xAC5B4EF7eDe2F2843a704E96dcAA637F4BA3Dc3f","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0xE4885Ed2818Cc9E840A25f94F9b2A28169D1AEA7","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x395d8A1D9aD82B5ABE558F8AbbFe183B27138af4","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x5B77107fCdF2b41903Bab2bc555D4fc14Cf7667D","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x89B28A9494589b09dbcCb69911c189f74FdAdc5a","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xb59BE8f3C85A9DD6E2899103B6fbF6ea405B99a4","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xa5fE91dde37D8BF2daCACC0168B115D28eD03f84","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x43894DE14462B421372bCFe445fA51b1b4A0Ff3D","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "450000000000000000000", "wrappedIndex": 2}
+{"address":"0x64eFAD69F099813021B41f4CaC6E749FD55e188f","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xEA11645ac7d8f2dEf94C9D8d86Bd766296c9B6b6","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xc55eC796A4dEBE625d95436a3531f4950b11bdcf","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x0889b240A5876aae745Ac19f1771853671dC5d36","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xdae301690004946424E41051aCe1791083be42a1","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xA1697F9Af0875B63DdC472d6EeBADa8C1fAB8568","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xcbFA4532D8B2ade2C261D3DD5ef2A2284f792692","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x6667c6fa9f2b3Fc1Cc8D85320b62703d938E4385","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x60D604890feaa0b5460B28A424407c24fe89374a","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "6000000000000000000000", "wrappedIndex": 1}
+{"address":"0x74CBfAF94A3577c539a9dCEE9870A6349a33b34f","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 1}
+{"address":"0x246ffB4d928E394a02E45761FecdbA6C2e79B8eB","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x3fCb7085B8F2F473F80bF6D879cAe99eA4DE9344","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "20000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xb0C830DCeB4EF55A60192472c20C8bf19dF03488","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x25e57F4612912614e6C99616Bd2aBB9b5Ae71E99","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x89bb15076C9f2D86aa98ec6cFfC1a71e31c38953","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x63cE19cCd39930725b8a3D2733627804718Ab83D","chainId":137}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 2}
+{"address":"0x230eCdB2a7CEE56d6889965A023AA0473D6dA507","chainId":137}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "3000000000000000000000000", "wrappedIndex": 1}
+{"address":"0x616D4D131F1147aC3B3C3CC752BAB8613395B2bB","chainId":1}	\N
+{"address":"0x2B218683178d029BAB6c9789b1073aA6c96E5176","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "1000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xfa24A90A3F2bBE5FEEA92B95cD0d14Ce709649f9","chainId":1}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 2}
+{"address":"0xc50d4347209F285247BDa8A09Fc1C12CE42031c3","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xcfAE6E251369467F465f13836Ac8135bd42f8A56","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "10000000000000000000000000", "wrappedIndex": 1}
+{"address":"0xbB6881874825E60e1160416D6C426eae65f2459E","chainId":1}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "3000000000000000000000", "wrappedIndex": 1}
+{"address":"0x8A819a4caBD6EfCb4E5504fE8679A1aBD831Dd8f","chainId":10}	\N
+{"address":"0x0503Dd6b2D3Dd463c9BeF67fB5156870Af63393E","chainId":10}	\N
+{"address":"0x9BF7c3b63c77b4B4F2717776F15A4bec1b532a28","chainId":10}	\N
+{"address":"0xf984eb2B8a7eF780245a797A2fCcd82f346409ca","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x11884dA90FB4221b3aa288a7741C51eC4Fc43B2f","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0xa94A92fC2cA0601481d5DE357489ceaEBa1C1Dc6","chainId":10}	\N
+{"address":"0xBEa652AA29D38114e9D36F2A2E4167b13DF68e73","chainId":10}	\N
+{"address":"0x23Ca0306B21ea71552B148cf3c4db4Fc85AE1929","chainId":10}	\N
+{"address":"0x43da214fab3315aA6c02e0B8f2BfB7Ef2E3C60A5","chainId":10}	\N
+{"address":"0x2DA61Ef3Cdcb97efb0f7099c02527fabFe94Dee5","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x45d37982784F022A9864748b4E8750e1e7019604","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "0", "wrappedIndex": 2}
+{"address":"0x5Bdd8C19b44C3e4a15305601A2C9841bDE9366F0","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "150000000000000000000000", "wrappedIndex": 2}
+{"address":"0x72D6df381cAC8C2283c0B13fe5262A1F5e8e8d1b","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "70000000000000000000", "wrappedIndex": 2}
+{"address":"0x20715545C15C76461861Cb0D6ba96929766D05A5","chainId":10}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0xF970659221BB9d01B615321b63a26E857ffC030B","chainId":10}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0xA5D4802B4ce6b745B0C9e1b4a79c093D197869c8","chainId":10}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0x2e2b8b82123789D895fD79913F6dFa51F5b5a0e6","chainId":10}	{"mainIndex": 2, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 1}
+{"address":"0x48aCE81C09382bfC08eD102e7eadd37e3B049752","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 2}
+{"address":"0x8025586aC5fB265A23B9492E7414BecCc2059ec3","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 2}
+{"address":"0x3e9cBFfd270AE67aBB09D28988e7e785498c7373","chainId":10}	{"mainIndex": 1, "lowerTarget": "0", "upperTarget": "300000000000000000000000", "wrappedIndex": 2}

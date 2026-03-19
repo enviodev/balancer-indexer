@@ -1288,39 +1288,41 @@ chains:
         address: "0x6817149cb753BF529565B4D023d7507eD2ff4Bc0"
         start_block: 48705989
 
-  # ===== X-Layer (commented out — not yet supported by HyperSync) =====
-  # - id: 196
-  #   start_block: 0
-  #   contracts:
-  #     - name: V3Vault
-  #       address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
-  #       start_block: 43082760
-  #     - name: V3ProtocolFeeController
-  #       address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
-  #       start_block: 43082746
-  #     - name: V3BPT
-  #     - name: V3ReClammPool
-  #     - name: V3WeightedPoolFactory
-  #       address: "0xf23b4db826dba14c0e857029dff076b1c0264843"
-  #       start_block: 43083284
-  #     - name: V3WeightedPoolV2Factory
-  #       address: "0x25EA7b202CD8447e8E6F4A7C59b19C66DfEf1925"
-  #       start_block: 49826470
-  #     - name: V3StablePoolV2Factory
-  #       address: "0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c"
-  #       start_block: 43083706
-  #     - name: V3StablePoolV3Factory
-  #       address: "0x1702067424096F07A60e62cceE3dE9420068492D"
-  #       start_block: 49829278
-  #     - name: V3Gyro2CLPPoolFactory
-  #       address: "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
-  #       start_block: 43083343
-  #     - name: V3GyroECLPPoolFactory
-  #       address: "0x5cF4928a3205728bd12830E1840F7DB85c62a4B9"
-  #       start_block: 43083438
-  #     - name: V3ReClammPoolV2Factory
-  #       address: "0x013D4382F291be5688AFBcc741Ee8A24C66B2C92"
-  #       start_block: 43084003
-  #     - name: V3StableSurgeHookV2
-  #       address: "0xa523f47a933d5020b23629ddf689695aa94612dc"
-  #       start_block: 43083767
+  # ===== X-Layer (RPC sync via dRPC — no HyperSync) =====
+  - id: 196
+    start_block: 0
+    rpc:
+      url: https://lb.drpc.org/ogrpc?network=xlayer&dkey=${ENVIO_DRPC_API_KEY}
+    contracts:
+      - name: V3Vault
+        address: "0xbA1333333333a1BA1108E8412f11850A5C319bA9"
+        start_block: 43082760
+      - name: V3ProtocolFeeController
+        address: "0xCaCC7E1efEEA8BB3af6d5720d12C1876aa6EE76b"
+        start_block: 43082746
+      - name: V3BPT
+      - name: V3ReClammPool
+      - name: V3WeightedPoolFactory
+        address: "0xf23b4db826dba14c0e857029dff076b1c0264843"
+        start_block: 43083284
+      - name: V3WeightedPoolV2Factory
+        address: "0x25EA7b202CD8447e8E6F4A7C59b19C66DfEf1925"
+        start_block: 49826470
+      - name: V3StablePoolV2Factory
+        address: "0x9dA18982a33FD0c7051B19F0d7C76F2d5E7e017c"
+        start_block: 43083706
+      - name: V3StablePoolV3Factory
+        address: "0x1702067424096F07A60e62cceE3dE9420068492D"
+        start_block: 49829278
+      - name: V3Gyro2CLPPoolFactory
+        address: "0xb9F8AB3ED3F3aCBa64Bc6cd2DcA74B7F38fD7B88"
+        start_block: 43083343
+      - name: V3GyroECLPPoolFactory
+        address: "0x5cF4928a3205728bd12830E1840F7DB85c62a4B9"
+        start_block: 43083438
+      - name: V3ReClammPoolV2Factory
+        address: "0x013D4382F291be5688AFBcc741Ee8A24C66B2C92"
+        start_block: 43084003
+      - name: V3StableSurgeHookV2
+        address: "0xa523f47a933d5020b23629ddf689695aa94612dc"
+        start_block: 43083767
