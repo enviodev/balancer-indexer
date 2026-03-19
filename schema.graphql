@@ -858,3 +858,141 @@ type GaugeLookup {
 type GaugeInjector {
   id: ID!
 }
+
+# ===== Reliquary Entities (Sonic) =====
+
+type Reliquary {
+  id: ID!
+  emissionToken_id: String! @index
+  totalAllocPoint: Int!
+  poolCount: Int!
+  relicCount: Int!
+  emissionCurve_id: String! @index
+}
+
+type ReliquaryEmissionCurve {
+  id: ID!
+  address: String!
+  rewardPerSecond: BigDecimal!
+}
+
+type ReliquaryPool {
+  id: ID!
+  pid: Int! @index
+  name: String!
+  reliquary_id: String! @index
+  rewarder_id: String @index
+  nftDescriptor: String!
+  poolTokenAddress: String!
+  poolToken_id: String! @index
+  totalBalance: BigDecimal!
+  relicCount: Int!
+  allocPoint: Int!
+}
+
+type ReliquaryPoolLevel {
+  id: ID!
+  pool_id: String! @index
+  level: Int!
+  balance: BigDecimal!
+  requiredMaturity: Int!
+  allocationPoints: Int!
+}
+
+type ReliquaryDailyPoolSnapshot {
+  id: ID!
+  pool_id: String! @index
+  poolPid: Int! @index
+  snapshotTimestamp: Int!
+  totalBalance: BigDecimal!
+  dailyDeposited: BigDecimal!
+  dailyWithdrawn: BigDecimal!
+  relicCount: Int!
+}
+
+type Relic {
+  id: ID!
+  relicId: Int! @index
+  reliquary_id: String! @index
+  pool_id: String! @index
+  pid: Int!
+  userAddress: String!
+  user_id: String! @index
+  balance: BigDecimal!
+  level: Int!
+  poolLevel_id: String! @index
+  entryTimestamp: Int!
+}
+
+type ReliquaryHarvest {
+  id: ID!
+  amount: BigDecimal!
+  token_id: String! @index
+  timestamp: Int!
+  reliquary_id: String! @index
+  relic_id: String! @index
+  user_id: String! @index
+}
+
+type ReliquaryUser {
+  id: ID!
+  address: String!
+  reliquary_id: String! @index
+}
+
+type ReliquaryDailyRelicSnapshot {
+  id: ID!
+  relicId: Int! @index
+  relic_id: String! @index
+  snapshotTimestamp: Int!
+  user_id: String! @index
+  userAddress: String!
+  poolPid: Int! @index
+  pool_id: String! @index
+  balance: BigDecimal!
+  entryTimestamp: Int!
+  level: Int!
+}
+
+type ReliquaryRewarder {
+  id: ID!
+}
+
+type ReliquaryRewarderEmission {
+  id: ID!
+  rewarder_id: String! @index
+  rewardToken_id: String! @index
+  rewardTokenAddress: String!
+  rewardPerSecond: BigDecimal!
+}
+
+# ===== STS (Sonic Staking) Entities =====
+
+type SonicStaking {
+  id: ID!
+  totalPool: BigDecimal!
+  totalDelegated: BigDecimal!
+  totalAssets: BigDecimal!
+  exchangeRate: BigDecimal!
+  totalRewardsClaimed: BigDecimal!
+  totalProtocolFee: BigDecimal!
+}
+
+type StsValidator {
+  id: ID!
+  sonicStaking_id: String! @index
+  amountAssetsDelegated: BigDecimal!
+}
+
+type SonicStakingSnapshot {
+  id: ID!
+  snapshotTimestamp: Int!
+  totalPool: BigDecimal!
+  totalDelegated: BigDecimal!
+  totalAssets: BigDecimal!
+  exchangeRate: BigDecimal!
+  totalRewardsClaimed: BigDecimal!
+  totalProtocolFee: BigDecimal!
+  rewardsClaimed24h: BigDecimal!
+  protocolFee24h: BigDecimal!
+}

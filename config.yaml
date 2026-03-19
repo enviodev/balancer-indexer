@@ -276,6 +276,37 @@ contracts:
     events:
       - event: "EmissionsInjection(address gauge, address token, uint256 amount)"
 
+  # ===== Reliquary =====
+  - name: ReliquaryContract
+    events:
+      - event: "LogPoolAddition(uint256 indexed pid, uint256 allocPoint, address indexed poolToken, address indexed rewarder, address nftDescriptor)"
+      - event: "LogPoolModified(uint256 indexed pid, uint256 allocPoint, address indexed rewarder, address nftDescriptor)"
+      - event: "LogSetEmissionCurve(address indexed emissionCurveAddress)"
+      - event: "Deposit(uint256 indexed pid, uint256 amount, address indexed to, uint256 indexed relicId)"
+      - event: "Withdraw(uint256 indexed pid, uint256 amount, address indexed to, uint256 indexed relicId)"
+      - event: "EmergencyWithdraw(uint256 indexed pid, uint256 amount, address indexed to, uint256 indexed relicId)"
+      - event: "Harvest(uint256 indexed pid, uint256 amount, address indexed to, uint256 indexed relicId)"
+      - event: "LevelChanged(uint256 indexed relicId, uint256 newLevel)"
+      - event: "Split(uint256 indexed fromId, uint256 indexed toId, uint256 amount)"
+      - event: "Shift(uint256 indexed fromId, uint256 indexed toId, uint256 amount)"
+      - event: "Merge(uint256 indexed fromId, uint256 indexed toId, uint256 amount)"
+      - event: "Transfer(address indexed from, address indexed to, uint256 indexed tokenId)"
+
+  - name: ReliquaryEmissionCurve
+    events:
+      - event: "LogRate(uint256 rate)"
+
+  # ===== Sonic Staking (STS) =====
+  - name: SonicStakingContract
+    events:
+      - event: "Delegated(uint256 indexed validatorId, uint256 amountAssets)"
+      - event: "Deposited(address indexed user, uint256 amountAssets, uint256 amountShares)"
+      - event: "Donated(address indexed user, uint256 amountAssets)"
+      - event: "Undelegated(address indexed user, uint256 withdrawId, uint256 validatorId, uint256 amountAssets, uint8 kind)"
+      - event: "OperatorClawBackInitiated(uint256 indexed withdrawId, uint256 indexed validatorId, uint256 amountAssets)"
+      - event: "OperatorClawBackExecuted(uint256 indexed withdrawId, uint256 amountAssetsWithdrawn, bool indexed emergency)"
+      - event: "RewardsClaimed(uint256 amountClaimed, uint256 protocolFee)"
+
 chains:
   # ===== Ethereum Mainnet =====
   - id: 1
@@ -1048,6 +1079,15 @@ chains:
       - name: V3StableSurgeHookV2
         address: "0x049919Ae32E50aEe5ea1A0998a841d175ec6f1b3"
         start_block: 20504697
+      # Reliquary
+      - name: ReliquaryContract
+        address: "0x973670ce19594f857a7cd85ee834c7a74a941684"
+        start_block: 457900
+      - name: ReliquaryEmissionCurve
+      # Sonic Staking (STS)
+      - name: SonicStakingContract
+        address: "0xe5da20f15420ad15de0fa650600afc998bbe3955"
+        start_block: 454490
 
   # ===== Polygon =====
   - id: 137
