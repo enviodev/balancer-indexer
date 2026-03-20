@@ -13,11 +13,11 @@ function stakingId(chainId: number): string {
   return makeChainId(chainId, `sts-${SONIC_STAKING_ADDRESS}`);
 }
 
-function validatorId(chainId: number, validatorNum: string): string {
+function validatorEntityId(chainId: number, validatorNum: string): string {
   return makeChainId(chainId, `sts-validator-${validatorNum}`);
 }
 
-function snapshotId(chainId: number, dayTs: number): string {
+function snapshotEntityId(chainId: number, dayTs: number): string {
   return makeChainId(chainId, `sts-snap-${SONIC_STAKING_ADDRESS}-${dayTs}`);
 }
 
@@ -44,7 +44,7 @@ async function getOrCreateStaking(context: any, chainId: number) {
 }
 
 async function getOrCreateValidator(context: any, chainId: number, valId: string) {
-  const id = validatorId(chainId, valId);
+  const id = validatorEntityId(chainId, valId);
   let validator = await context.StsValidator.get(id);
   if (!validator) {
     const staking = await getOrCreateStaking(context, chainId);
@@ -60,7 +60,7 @@ async function getOrCreateValidator(context: any, chainId: number, valId: string
 
 async function getOrCreateSnapshot(context: any, chainId: number, timestamp: number) {
   const dayTs = dayTimestamp(timestamp);
-  const id = snapshotId(chainId, dayTs);
+  const id = snapshotEntityId(chainId, dayTs);
   let snapshot = await context.SonicStakingSnapshot.get(id);
   if (!snapshot) {
     snapshot = {
@@ -80,28 +80,23 @@ async function getOrCreateSnapshot(context: any, chainId: number, timestamp: num
   return snapshot;
 }
 
-async function updateStakingFromChain(context: any, chainId: number, contractAddr: string) {
-  const state = await context.effect(getSonicStakingState, { address: contractAddr, chainId });
-  const staking = await getOrCreateStaking(context, chainId);
-  context.SonicStaking.set({
-    ...staking,
-    totalPool: scaleDown(BigInt(state.totalPool), 18),
-    totalDelegated: scaleDown(BigInt(state.totalDelegated), 18),
-    totalAssets: scaleDown(BigInt(state.totalAssets), 18),
-    exchangeRate: scaleDown(BigInt(state.rate), 18),
-  });
-}
+/** Single RPC call to update both staking entity and snapshot */
+async function updateStakingAndSnapshot(context: any, chainId: number, contractAddr: string, timestamp: number) {
+  try {
+    const state = await context.effect(getSonicStakingState, { address: contractAddr, chainId });
+    const totalPool = scaleDown(BigInt(state.totalPool), 18);
+    const totalDelegated = scaleDown(BigInt(state.totalDelegated), 18);
+    const totalAssets = scaleDown(BigInt(state.totalAssets), 18);
+    const exchangeRate = scaleDown(BigInt(state.rate), 18);
 
-async function takeSnapshot(context: any, chainId: number, contractAddr: string, timestamp: number) {
-  const state = await context.effect(getSonicStakingState, { address: contractAddr, chainId });
-  const snapshot = await getOrCreateSnapshot(context, chainId, timestamp);
-  context.SonicStakingSnapshot.set({
-    ...snapshot,
-    totalPool: scaleDown(BigInt(state.totalPool), 18),
-    totalDelegated: scaleDown(BigInt(state.totalDelegated), 18),
-    totalAssets: scaleDown(BigInt(state.totalAssets), 18),
-    exchangeRate: scaleDown(BigInt(state.rate), 18),
-  });
+    const staking = await getOrCreateStaking(context, chainId);
+    context.SonicStaking.set({ ...staking, totalPool, totalDelegated, totalAssets, exchangeRate });
+
+    const snapshot = await getOrCreateSnapshot(context, chainId, timestamp);
+    context.SonicStakingSnapshot.set({ ...snapshot, totalPool, totalDelegated, totalAssets, exchangeRate });
+  } catch (e) {
+    context.log.warn(`STS: Failed to fetch on-chain state: ${e}`);
+  }
 }
 
 // ================================
@@ -109,8 +104,7 @@ async function takeSnapshot(context: any, chainId: number, contractAddr: string,
 // ================================
 
 SonicStakingContract.Deposited.handler(async ({ event, context }) => {
-  await updateStakingFromChain(context, event.chainId, event.srcAddress);
-  await takeSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -118,8 +112,7 @@ SonicStakingContract.Deposited.handler(async ({ event, context }) => {
 // ================================
 
 SonicStakingContract.Donated.handler(async ({ event, context }) => {
-  await updateStakingFromChain(context, event.chainId, event.srcAddress);
-  await takeSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -136,8 +129,7 @@ SonicStakingContract.Delegated.handler(async ({ event, context }) => {
     amountAssetsDelegated: validator.amountAssetsDelegated.plus(scaleDown(amountAssets, 18)),
   });
 
-  await updateStakingFromChain(context, chainId, event.srcAddress);
-  await takeSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -154,8 +146,7 @@ SonicStakingContract.Undelegated.handler(async ({ event, context }) => {
     amountAssetsDelegated: validator.amountAssetsDelegated.minus(scaleDown(amountAssets, 18)),
   });
 
-  await updateStakingFromChain(context, chainId, event.srcAddress);
-  await takeSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -172,8 +163,7 @@ SonicStakingContract.OperatorClawBackInitiated.handler(async ({ event, context }
     amountAssetsDelegated: validator.amountAssetsDelegated.minus(scaleDown(amountAssets, 18)),
   });
 
-  await updateStakingFromChain(context, chainId, event.srcAddress);
-  await takeSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -181,8 +171,7 @@ SonicStakingContract.OperatorClawBackInitiated.handler(async ({ event, context }
 // ================================
 
 SonicStakingContract.OperatorClawBackExecuted.handler(async ({ event, context }) => {
-  await updateStakingFromChain(context, event.chainId, event.srcAddress);
-  await takeSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
+  await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
 });
 
 // ================================
@@ -196,6 +185,7 @@ SonicStakingContract.RewardsClaimed.handler(async ({ event, context }) => {
   const scaledClaimed = scaleDown(amountClaimed, 18);
   const scaledFee = scaleDown(protocolFee, 18);
 
+  // Update cumulative rewards first
   const staking = await getOrCreateStaking(context, chainId);
   context.SonicStaking.set({
     ...staking,
@@ -212,7 +202,6 @@ SonicStakingContract.RewardsClaimed.handler(async ({ event, context }) => {
     protocolFee24h: snapshot.protocolFee24h.plus(scaledFee),
   });
 
-  // Also update on-chain state
-  await updateStakingFromChain(context, chainId, event.srcAddress);
-  await takeSnapshot(context, chainId, event.srcAddress, ts);
+  // Then update on-chain state (single RPC call)
+  await updateStakingAndSnapshot(context, chainId, event.srcAddress, ts);
 });
