@@ -30,7 +30,7 @@ export const getReliquaryPositionForId = createEffect(
       poolId: S.string,
       level: S.string,
     }),
-    cache: false,
+    cache: true,
     rateLimit: false,
   },
   async ({ input }) => {
