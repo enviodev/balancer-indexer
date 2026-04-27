@@ -1,34 +1,82 @@
 # Balancer Indexer
 
-A unified, multichain Balancer Protocol indexer built with [Envio HyperIndex](https://docs.envio.dev). Tracks Balancer V2 and V3 pools, swaps, liquidity events, gauges, and voting escrow across 14 chains in a single deployment.
+Balancer Protocol Unified Indexer. Built with [Envio HyperIndex](https://docs.envio.dev).
 
-## Chains (14)
+## Chains
 
-`1`, `10`, `100`, `137`, `143`, `146`, `196`, `999`, `1101`, `8453`, `9745`, `11155111`, `42161`, `43114`
+| Network | Chain ID |
+|---|---|
+| Ethereum Mainnet | 1 |
+| Gnosis | 100 |
+| Sepolia | 11155111 |
+| Arbitrum | 42161 |
+| Base | 8453 |
+| Optimism | 10 |
+| Avalanche | 43114 |
+| Sonic | 146 |
+| Polygon | 137 |
+| Polygon zkEVM | 1101 |
+| Hyperliquid | 999 |
+| Plasma | 9745 |
+| Monad | 143 |
+| (chain 196) | 196 |
 
-## What it indexes
+## Contracts
 
-### V3
-- `V3Vault`: pool registration, swaps, liquidity add/remove, buffer shares, recovery mode, paused state, swap fee changes
-- `V3ProtocolFeeController`: protocol-level swap and yield fee changes, fee collection, withdrawals
-- `V3BPT`: pool token transfers (registered dynamically when pools are created)
-- V3 Pool Factories: `V3WeightedPoolFactory`, `V3WeightedPoolV2Factory`, `V3StablePoolFactory` (V1/V2/V3), `V3Gyro2CLPPoolFactory`, `V3GyroECLPPoolFactory`, `V3QuantAMMWeightedPoolFactory`, `V3LBPoolFactory` (V1/V2/V3), `V3FixedPriceLBPoolFactory`, `V3ReClammPoolFactory` (V1/V2)
-- V3 Hooks: `V3StableSurgeHook` (V1/V2/V3), `V3ReClammPool`
+- **`V3Vault`**: `PoolRegistered`, `Swap`, `LiquidityAdded`, `LiquidityRemoved`, `LiquidityAddedToBuffer`, `LiquidityRemovedFromBuffer`, `BufferSharesMinted`, `BufferSharesBurned`, `Wrap`, `Unwrap`, `SwapFeePercentageChanged`, `PoolRecoveryModeStateChanged`, `PoolPausedStateChanged`, `ProtocolFeeControllerChanged`
+- **`V3ProtocolFeeController`**: `GlobalProtocolSwapFeePercentageChanged`, `GlobalProtocolYieldFeePercentageChanged`, `PoolCreatorSwapFeePercentageChanged`, `PoolCreatorYieldFeePercentageChanged`, `ProtocolSwapFeePercentageChanged`, `ProtocolYieldFeePercentageChanged`, `ProtocolSwapFeeCollected`, `ProtocolYieldFeeCollected`, `ProtocolFeesWithdrawn`
+- **`V3BPT`**: `Transfer`
+- **`V3WeightedPoolFactory`**: `PoolCreated`
+- **`V3WeightedPoolV2Factory`**: `PoolCreated`
+- **`V3StablePoolFactory`**: `PoolCreated`
+- **`V3StablePoolV2Factory`**: `PoolCreated`
+- **`V3StablePoolV3Factory`**: `PoolCreated`
+- **`V3Gyro2CLPPoolFactory`**: `PoolCreated`
+- **`V3GyroECLPPoolFactory`**: `PoolCreated`
+- **`V3QuantAMMWeightedPoolFactory`**: `PoolCreated`
+- **`V3LBPoolFactory`**: `PoolCreated`
+- **`V3LBPoolV2Factory`**: `PoolCreated`
+- **`V3LBPoolV3Factory`**: `PoolCreated`
+- **`V3FixedPriceLBPoolFactory`**: `PoolCreated`
+- **`V3ReClammPoolFactory`**: `PoolCreated`
+- **`V3ReClammPoolV2Factory`**: `PoolCreated`
+- **`V3StableSurgeHook`**: `StableSurgeHookRegistered`
+- **`V3StableSurgeHookV2`**: `StableSurgeHookRegistered`
+- **`V3StableSurgeHookV3`**: `StableSurgeHookRegistered`
+- **`V3ReClammPool`**: `CenterednessMarginUpdated`, `LastTimestampUpdated`, `VirtualBalancesUpdated`, `DailyPriceShiftExponentUpdated`, `PriceRatioStateUpdated`
+- **`V2Vault`**: `Swap`, `PoolBalanceChanged`, `PoolBalanceManaged`, `InternalBalanceChanged`
+- **`V2EventEmitter`**: `LogArgument`
+- **`V2PoolFactory`**: `PoolCreated`
+- **`V2Pool`**: `Transfer`, `SwapFeePercentageChanged`, `PausedStateChanged`, `RecoveryModeStateChanged`, `ProtocolFeePercentageCacheUpdated`, `AmpUpdateStarted`, `AmpUpdateStopped`, `SwapEnabledSet`, `GradualWeightUpdateScheduled`, `OracleEnabledChanged`, `TargetsSet`, `PausedLocally`, `UnpausedLocally`, `PriceRateProviderSet`, `PriceRateCacheUpdated`, `TokenRateProviderSet`, `TokenRateCacheUpdated`, `MustAllowlistLPsSet`, `JoinExitEnabledSet`, `CircuitBreakerSet`, `TokenAdded`, `TokenRemoved`, `ManagementAumFeeCollected`, `ManagementFeePercentageChanged`, `ManagementAumFeePercentageChanged`, `GradualSwapFeeUpdateScheduled`, `ParametersSet`
+- **`V2ProtocolIdRegistry`**: `ProtocolIdRegistered`, `ProtocolIdRenamed`
+- **`GaugeController`**: `AddType`, `NewGauge`, `VoteForGauge`
+- **`VotingEscrowContract`**: `Deposit`, `Withdraw`, `Supply`
+- **`OmniVotingEscrow`**: `UserBalToChain`
+- **`OmniVotingEscrowChild`**: `UserBalFromChain`
+- **`GaugeAuthorizerAdaptor`**: `ActionPerformed`
+- **`GaugeLiquidityV1Factory`**: `GaugeCreated`
+- **`GaugeLiquidityV2Factory`**: `LiquidityGaugeV2Created`
+- **`ChildChainGaugeV1Factory`**: `RewardsOnlyGaugeCreated`
+- **`ChildChainGaugeV2Factory`**: `ChildChainGaugeV2Created`
+- **`SingleRecipientGaugeV1Factory`**: `SingleRecipientGaugeCreated`
+- **`SingleRecipientGaugeV2Factory`**: `SingleRecipientGaugeV2Created`
+- **`ArbitrumRootGaugeV1Factory`**: `ArbitrumRootGaugeCreated`
+- **`PolygonRootGaugeV1Factory`**: `PolygonRootGaugeCreated`
+- **`OptimismRootGaugeV1Factory`**: `OptimismRootGaugeCreated`
+- **`RootGaugeV2Factory`**: `RootGaugeV2Created`
+- **`GaugeLiquidityGauge`**: `GaugeLiquidityGaugeTransfer`, `RelativeWeightCapChanged`
+- **`GaugeRewardsOnlyGauge`**: `GaugeRewardsOnlyTransfer`
+- **`GaugeChildChainStreamer`**: `RewardDurationUpdated`
+- **`GaugeRootGauge`**: `RootGaugeRelativeWeightCapChanged`
+- **`GaugeSingleRecipientGauge`**: `SingleRecipientRelativeWeightCapChanged`
+- **`GaugeInjectorContract`**: `EmissionsInjection`
+- **`ReliquaryContract`**: `LogPoolAddition`, `LogPoolModified`, `LogSetEmissionCurve`, `Deposit`, `Withdraw`, `EmergencyWithdraw`, `Harvest`, `LevelChanged`, `Split`, `Shift`, `Merge`, `Transfer`
+- **`ReliquaryEmissionCurve`**: `LogRate`
+- **`SonicStakingContract`**: `Delegated`, `Deposited`, `Donated`, `Undelegated`, `OperatorClawBackInitiated`, `OperatorClawBackExecuted`, `RewardsClaimed`
 
-### V2
-- `V2Vault`, `V2EventEmitter`, `V2PoolFactory`, `V2Pool`, `V2ProtocolIdRegistry`
+## Schema entities (82)
 
-### Gauges and voting escrow
-- `GaugeController`, `VotingEscrowContract`, `OmniVotingEscrow`, `OmniVotingEscrowChild`, `GaugeAuthorizerAdaptor`
-- Gauge factories (V1/V2 liquidity, child-chain V1/V2, single-recipient V1/V2, Arbitrum/Polygon/Optimism root V1, V2 root)
-- Gauge implementations (`GaugeLiquidityGauge`, `GaugeRewardsOnlyGauge`, `GaugeChildChainStreamer`, `GaugeRootGauge`, `GaugeSingleRecipientGauge`, `GaugeInjectorContract`)
-
-### Other
-- `ReliquaryContract`, `ReliquaryEmissionCurve`, `SonicStakingContract`
-
-## Schema
-
-82 GraphQL entities including `User`, `Token`, `V3Vault`, `V3Pool`, `V3Swap`, `V3PoolSnapshot`, `V3Buffer`, `V2Pool`, plus per-pool-type parameter entities (`V3WeightedParams`, `V3StableSurgeParams`, `V3GyroEParams`, `V3QuantAMMWeightedParams`, etc.).
+`User`, `Token`, `V3Vault`, `V3Pool`, `V3Hook`, `V3HookConfig`, `V3LiquidityManagement`, `V3PoolToken`, `V3RateProvider`, `V3Buffer`, `V3BufferShare`, `V3Swap`, `V3AddRemove`, `V3PoolShare`, `V3PoolSnapshot`, `V3Factory`, `V3PoolTypeInfo`, `V3WeightedParams`, `V3StableParams`, `V3StableSurgeParams`, `V3Gyro2Params`, `V3GyroEParams`, `V3QuantAMMWeightedParams`, `V3QuantAMMWeightedDetail`, `V3LBPParams`, `V3FixedLBPParams`, `V3ReClammParams`, `V2Balancer`, `V2Pool`, `V2PoolContract`, `V2PoolToken`, `V2PriceRateProvider`, `V2CircuitBreaker`, `V2PoolShare`, `V2UserInternalBalance`, `V2GradualWeightUpdate`, `V2AmpUpdate`, `V2SwapFeeUpdate`, `V2Swap`, `V2JoinExit`, `V2LatestPrice`, `V2PoolHistoricalLiquidity`, `V2TokenPrice`, `V2ManagementOperation`, `V2PoolSnapshot`, `V2TokenSnapshot`, `V2TradePair`, `V2TradePairSnapshot`, `V2BalancerSnapshot`, `V2ProtocolIdData`, `V2FXOracle`, `V2TokenData`, `VotingEscrow`, `OmniVotingEscrowLock`, `VotingEscrowLock`, `LockSnapshot`, `GaugeFactory`, `LiquidityGauge`, `RootGauge`, `SingleRecipientGauge`, `Gauge`, `GaugePool`, `RewardToken`, `GaugeShare`, `GaugeType`, `GaugeVote`, `GaugeLookup`, `GaugeInjector`, `Reliquary`, `ReliquaryEmissionCurve`, `ReliquaryPool`, `ReliquaryPoolLevel`, `ReliquaryDailyPoolSnapshot`, `Relic`, `ReliquaryHarvest`, `ReliquaryUser`, `ReliquaryDailyRelicSnapshot`, `ReliquaryRewarder`, `ReliquaryRewarderEmission`, `SonicStaking`, `StsValidator`, `SonicStakingSnapshot`
 
 ## Run locally
 
