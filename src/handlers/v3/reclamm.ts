@@ -1,21 +1,29 @@
-import { V3ReClammPool } from "generated";
+import { indexer } from "envio";
 import { makeChainId } from "../../utils/entities.js";
 
-V3ReClammPool.CenterednessMarginUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPool", event: "CenterednessMarginUpdated" },
+  async ({ event, context }) => {
   const paramsId = makeChainId(event.chainId, event.srcAddress);
   const params = await context.V3ReClammParams.get(paramsId);
   if (!params) return;
   context.V3ReClammParams.set({ ...params, centerednessMargin: event.params.centerednessMargin });
-});
+}
+);
 
-V3ReClammPool.LastTimestampUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPool", event: "LastTimestampUpdated" },
+  async ({ event, context }) => {
   const paramsId = makeChainId(event.chainId, event.srcAddress);
   const params = await context.V3ReClammParams.get(paramsId);
   if (!params) return;
   context.V3ReClammParams.set({ ...params, lastTimestamp: BigInt(event.params.lastTimestamp) });
-});
+}
+);
 
-V3ReClammPool.VirtualBalancesUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPool", event: "VirtualBalancesUpdated" },
+  async ({ event, context }) => {
   const paramsId = makeChainId(event.chainId, event.srcAddress);
   const params = await context.V3ReClammParams.get(paramsId);
   if (!params) return;
@@ -23,9 +31,12 @@ V3ReClammPool.VirtualBalancesUpdated.handler(async ({ event, context }) => {
     ...params,
     lastVirtualBalances: [event.params.virtualBalanceA, event.params.virtualBalanceB],
   });
-});
+}
+);
 
-V3ReClammPool.DailyPriceShiftExponentUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPool", event: "DailyPriceShiftExponentUpdated" },
+  async ({ event, context }) => {
   const paramsId = makeChainId(event.chainId, event.srcAddress);
   const params = await context.V3ReClammParams.get(paramsId);
   if (!params) return;
@@ -34,9 +45,12 @@ V3ReClammPool.DailyPriceShiftExponentUpdated.handler(async ({ event, context }) 
     dailyPriceShiftExponent: event.params.dailyPriceShiftExponent,
     dailyPriceShiftBase: event.params.dailyPriceShiftBase,
   });
-});
+}
+);
 
-V3ReClammPool.PriceRatioStateUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPool", event: "PriceRatioStateUpdated" },
+  async ({ event, context }) => {
   const paramsId = makeChainId(event.chainId, event.srcAddress);
   const params = await context.V3ReClammParams.get(paramsId);
   if (!params) return;
@@ -47,4 +61,5 @@ V3ReClammPool.PriceRatioStateUpdated.handler(async ({ event, context }) => {
     startFourthRootPriceRatio: event.params.startFourthRootPriceRatio,
     endFourthRootPriceRatio: event.params.endFourthRootPriceRatio,
   });
-});
+}
+);

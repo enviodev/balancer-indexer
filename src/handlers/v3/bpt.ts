@@ -1,11 +1,13 @@
-import { V3BPT, BigDecimal } from "generated";
+import { indexer, type BigDecimal } from "envio";
 import { ZERO_ADDRESS, ZERO_BD } from "../../utils/constants.js";
 import { tokenToDecimal } from "../../utils/math.js";
 import { makeChainId, getPoolShareId, defaultV3PoolShare, defaultUser } from "../../utils/entities.js";
 
 const BPT_DECIMALS = 18;
 
-V3BPT.Transfer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3BPT", event: "Transfer" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -68,4 +70,5 @@ V3BPT.Transfer.handler(async ({ event, context }) => {
   }
 
   context.V3Pool.set(updatedPool);
-});
+}
+);

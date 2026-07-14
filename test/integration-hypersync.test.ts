@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createTestIndexer } from "generated";
+import { createTestIndexer } from "envio";
 
 // ============================================================
 // Integration tests using createTestIndexer() with real HyperSync data.

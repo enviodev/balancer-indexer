@@ -1,12 +1,4 @@
-import {
-  GaugeLiquidityGauge,
-  GaugeRewardsOnlyGauge,
-  GaugeRootGauge,
-  GaugeSingleRecipientGauge,
-  GaugeChildChainStreamer,
-  GaugeInjectorContract,
-  GaugeAuthorizerAdaptor,
-} from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_ADDRESS } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
@@ -94,11 +86,16 @@ async function handleGaugeTransfer(
 // GaugeLiquidityGauge handlers
 // ================================
 
-GaugeLiquidityGauge.GaugeLiquidityGaugeTransfer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeLiquidityGauge", event: "GaugeLiquidityGaugeTransfer" },
+  async ({ event, context }) => {
   await handleGaugeTransfer(event, context);
-});
+}
+);
 
-GaugeLiquidityGauge.RelativeWeightCapChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeLiquidityGauge", event: "RelativeWeightCapChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const gaugeAddress = event.srcAddress.toLowerCase();
   const gaugeId = makeChainId(chainId, gaugeAddress);
@@ -109,21 +106,27 @@ GaugeLiquidityGauge.RelativeWeightCapChanged.handler(async ({ event, context }) 
     ...gauge,
     relativeWeightCap: scaleDown(event.params.new_relative_weight_cap, 18),
   });
-});
+}
+);
 
 // ================================
 // GaugeRewardsOnlyGauge handlers
 // ================================
 
-GaugeRewardsOnlyGauge.GaugeRewardsOnlyTransfer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeRewardsOnlyGauge", event: "GaugeRewardsOnlyTransfer" },
+  async ({ event, context }) => {
   await handleGaugeTransfer(event, context);
-});
+}
+);
 
 // ================================
 // GaugeRootGauge handlers
 // ================================
 
-GaugeRootGauge.RootGaugeRelativeWeightCapChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeRootGauge", event: "RootGaugeRelativeWeightCapChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const gaugeAddress = event.srcAddress.toLowerCase();
   const gaugeId = makeChainId(chainId, gaugeAddress);
@@ -134,13 +137,16 @@ GaugeRootGauge.RootGaugeRelativeWeightCapChanged.handler(async ({ event, context
     ...gauge,
     relativeWeightCap: scaleDown(event.params.new_relative_weight_cap, 18),
   });
-});
+}
+);
 
 // ================================
 // GaugeSingleRecipientGauge handlers
 // ================================
 
-GaugeSingleRecipientGauge.SingleRecipientRelativeWeightCapChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeSingleRecipientGauge", event: "SingleRecipientRelativeWeightCapChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const gaugeAddress = event.srcAddress.toLowerCase();
   const gaugeId = makeChainId(chainId, gaugeAddress);
@@ -151,13 +157,16 @@ GaugeSingleRecipientGauge.SingleRecipientRelativeWeightCapChanged.handler(async 
     ...gauge,
     relativeWeightCap: scaleDown(event.params.new_relative_weight_cap, 18),
   });
-});
+}
+);
 
 // ================================
 // GaugeChildChainStreamer handlers
 // ================================
 
-GaugeChildChainStreamer.RewardDurationUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeChildChainStreamer", event: "RewardDurationUpdated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const streamerAddress = event.srcAddress.toLowerCase();
   const rewardTokenAddress = event.params.reward_token.toLowerCase();
@@ -171,25 +180,31 @@ GaugeChildChainStreamer.RewardDurationUpdated.handler(async ({ event, context })
   if (gaugeAddress) {
     await setRewardData(gaugeAddress.toLowerCase(), rewardTokenAddress, chainId, event.block.number, context);
   }
-});
+}
+);
 
 // ================================
 // GaugeInjectorContract handlers
 // ================================
 
-GaugeInjectorContract.EmissionsInjection.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeInjectorContract", event: "EmissionsInjection" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const gaugeAddress = event.params.gauge.toLowerCase();
   const tokenAddress = event.params.token.toLowerCase();
 
   await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
-});
+}
+);
 
 // ================================
 // GaugeAuthorizerAdaptor handlers
 // ================================
 
-GaugeAuthorizerAdaptor.ActionPerformed.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeAuthorizerAdaptor", event: "ActionPerformed" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const data = event.params.data as string;
 
@@ -205,4 +220,5 @@ GaugeAuthorizerAdaptor.ActionPerformed.handler(async ({ event, context }) => {
   const gaugeAddress = event.params.target.toLowerCase();
 
   await setRewardData(gaugeAddress, tokenAddress, chainId, event.block.number, context);
-});
+}
+);

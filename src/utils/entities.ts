@@ -1,21 +1,5 @@
 import BigDecimal from "bignumber.js";
-import type {
-  V3Pool,
-  V3PoolToken,
-  V3PoolSnapshot,
-  V3PoolShare,
-  V3Vault,
-  V3Hook,
-  V3HookConfig,
-  V3LiquidityManagement,
-  V3RateProvider,
-  V3Buffer,
-  V3BufferShare,
-  Token,
-  User,
-  V3Factory,
-  V3PoolTypeInfo,
-} from "generated";
+import type { V3Pool, V3PoolToken, V3PoolSnapshot, V3PoolShare, Token, User } from "envio";
 import { ZERO_BD, ZERO_BI, ZERO_ADDRESS, ONE_BD } from "./constants.js";
 
 const DAY = 24 * 60 * 60;

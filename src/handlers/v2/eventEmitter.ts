@@ -1,4 +1,4 @@
-import { V2EventEmitter } from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { makeChainId } from "../../utils/entities.js";
 import { setRewardData } from "../../utils/gauges/rewards.js";
@@ -42,14 +42,19 @@ const POOL_TYPES = [
 ];
 
 // contractRegister: register GaugeInjectorContract dynamic contracts
-V2EventEmitter.LogArgument.contractRegister(({ event, context }) => {
+indexer.contractRegister(
+  { contract: "V2EventEmitter", event: "LogArgument" },
+  async ({ event, context }) => {
   if (event.params.topic === SET_GAUGE_INJECTOR) {
     const injectorAddress = event.params.pool.toLowerCase();
-    context.addGaugeInjectorContract(injectorAddress as `0x${string}`);
+    context.chain.GaugeInjectorContract.add(injectorAddress as `0x${string}`);
   }
-});
+}
+);
 
-V2EventEmitter.LogArgument.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2EventEmitter", event: "LogArgument" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const identifier = event.params.topic;
 
@@ -140,4 +145,5 @@ V2EventEmitter.LogArgument.handler(async ({ event, context }) => {
       });
     }
   }
-});
+}
+);

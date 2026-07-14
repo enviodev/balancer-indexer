@@ -1,29 +1,4 @@
-import {
-  V3WeightedPoolFactory,
-  V3WeightedPoolV2Factory,
-  V3StablePoolFactory,
-  V3StablePoolV2Factory,
-  V3StablePoolV3Factory,
-  V3Gyro2CLPPoolFactory,
-  V3GyroECLPPoolFactory,
-  V3QuantAMMWeightedPoolFactory,
-  V3LBPoolFactory,
-  V3LBPoolV2Factory,
-  V3LBPoolV3Factory,
-  V3FixedPriceLBPoolFactory,
-  V3ReClammPoolFactory,
-  V3ReClammPoolV2Factory,
-  BigDecimal,
-  type V3Factory,
-  type V3PoolTypeInfo,
-  type V3WeightedParams,
-  type V3StableParams,
-  type V3Gyro2Params,
-  type V3GyroEParams,
-  type V3LBPParams,
-  type V3FixedLBPParams,
-  type V3ReClammParams,
-} from "generated";
+import { indexer, type BigDecimal, type V3Factory, type V3PoolTypeInfo, type V3WeightedParams, type V3StableParams, type V3Gyro2Params, type V3GyroEParams, type V3LBPParams, type V3FixedLBPParams, type V3ReClammParams } from "envio";
 import { ZERO_BD } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
 import { makeChainId } from "../../utils/entities.js";
@@ -86,7 +61,9 @@ function createPoolTypeInfo(
 
 // ===== Weighted Pools =====
 
-V3WeightedPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3WeightedPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "Weighted", 1);
@@ -99,9 +76,12 @@ V3WeightedPoolFactory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3WeightedParams.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { weightedParams_id: paramsId });
-});
+}
+);
 
-V3WeightedPoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3WeightedPoolV2Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "Weighted", 2);
@@ -114,7 +94,8 @@ V3WeightedPoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3WeightedParams.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { weightedParams_id: paramsId });
-});
+}
+);
 
 // ===== Stable Pools =====
 
@@ -133,21 +114,32 @@ async function handleStablePool(event: any, context: any, version: number) {
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { stableParams_id: paramsId });
 }
 
-V3StablePoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StablePoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleStablePool(event, context, 1);
-});
+}
+);
 
-V3StablePoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StablePoolV2Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleStablePool(event, context, 2);
-});
+}
+);
 
-V3StablePoolV3Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StablePoolV3Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleStablePool(event, context, 3);
-});
+}
+);
 
 // ===== Gyro2 Pools =====
 
-V3Gyro2CLPPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Gyro2CLPPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "Gyro2", 1);
@@ -161,11 +153,14 @@ V3Gyro2CLPPoolFactory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3Gyro2Params.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { gyro2Params_id: paramsId });
-});
+}
+);
 
 // ===== GyroE Pools =====
 
-V3GyroECLPPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3GyroECLPPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "GyroE", 1);
@@ -200,11 +195,14 @@ V3GyroECLPPoolFactory.PoolCreated.handler(async ({ event, context }) => {
     });
   }
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { gyroEParams_id: paramsId });
-});
+}
+);
 
 // ===== QuantAMM Pools =====
 
-V3QuantAMMWeightedPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3QuantAMMWeightedPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "QuantAMMWeighted", 1);
@@ -252,7 +250,8 @@ V3QuantAMMWeightedPoolFactory.PoolCreated.handler(async ({ event, context }) => 
     });
   }
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { quantAMMWeightedParams_id: paramsId });
-});
+}
+);
 
 // ===== LBP Pools =====
 
@@ -284,21 +283,32 @@ async function handleLBPool(event: any, context: any, version: number) {
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { lbpParams_id: paramsId });
 }
 
-V3LBPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3LBPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleLBPool(event, context, 1);
-});
+}
+);
 
-V3LBPoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3LBPoolV2Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleLBPool(event, context, 2);
-});
+}
+);
 
-V3LBPoolV3Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3LBPoolV3Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   await handleLBPool(event, context, 3);
-});
+}
+);
 
 // ===== Fixed Price LBP =====
 
-V3FixedPriceLBPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3FixedPriceLBPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "FixedLBP", 1);
@@ -317,15 +327,21 @@ V3FixedPriceLBPoolFactory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3FixedLBPParams.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { fixedLBPParams_id: paramsId });
-});
+}
+);
 
 // ===== ReClamm Pools =====
 
-V3ReClammPoolFactory.PoolCreated.contractRegister(({ event, context }) => {
-  context.addV3ReClammPool(event.params.pool);
-});
+indexer.contractRegister(
+  { contract: "V3ReClammPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
+  context.chain.V3ReClammPool.add(event.params.pool);
+}
+);
 
-V3ReClammPoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "ReClamm", 1);
@@ -347,13 +363,19 @@ V3ReClammPoolFactory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3ReClammParams.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { reClammParams_id: paramsId });
-});
+}
+);
 
-V3ReClammPoolV2Factory.PoolCreated.contractRegister(({ event, context }) => {
-  context.addV3ReClammPool(event.params.pool);
-});
+indexer.contractRegister(
+  { contract: "V3ReClammPoolV2Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
+  context.chain.V3ReClammPool.add(event.params.pool);
+}
+);
 
-V3ReClammPoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3ReClammPoolV2Factory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryId = ensureFactory(context, chainId, event.srcAddress, "ReClamm", 2);
@@ -375,4 +397,5 @@ V3ReClammPoolV2Factory.PoolCreated.handler(async ({ event, context }) => {
   };
   context.V3ReClammParams.set(params);
   createPoolTypeInfo(context, chainId, poolAddress, factoryId, { reClammParams_id: paramsId });
-});
+}
+);

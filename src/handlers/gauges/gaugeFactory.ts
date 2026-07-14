@@ -1,15 +1,4 @@
-import {
-  GaugeLiquidityV1Factory,
-  GaugeLiquidityV2Factory,
-  ChildChainGaugeV1Factory,
-  ChildChainGaugeV2Factory,
-  SingleRecipientGaugeV1Factory,
-  SingleRecipientGaugeV2Factory,
-  ArbitrumRootGaugeV1Factory,
-  PolygonRootGaugeV1Factory,
-  OptimismRootGaugeV1Factory,
-  RootGaugeV2Factory,
-} from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD } from "../../utils/constants.js";
 import { makeChainId } from "../../utils/entities.js";
@@ -216,130 +205,190 @@ async function handleRootGaugeCreated(
 // 1. GaugeLiquidityV1Factory — GaugeCreated
 // ================================================================
 
-GaugeLiquidityV1Factory.GaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeLiquidityGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "GaugeLiquidityV1Factory", event: "GaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeLiquidityGauge.add(event.params.gauge);
+}
+);
 
-GaugeLiquidityV1Factory.GaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeLiquidityV1Factory", event: "GaugeCreated" },
+  async ({ event, context }) => {
   await handleLiquidityGaugeCreated(event, context, {
     isPreferentialGauge: false,
   });
-});
+}
+);
 
 // ================================================================
 // 2. GaugeLiquidityV2Factory — LiquidityGaugeV2Created
 // ================================================================
 
-GaugeLiquidityV2Factory.LiquidityGaugeV2Created.contractRegister(({ event, context }) => {
-  context.addGaugeLiquidityGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "GaugeLiquidityV2Factory", event: "LiquidityGaugeV2Created" },
+  async ({ event, context }) => {
+  context.chain.GaugeLiquidityGauge.add(event.params.gauge);
+}
+);
 
-GaugeLiquidityV2Factory.LiquidityGaugeV2Created.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeLiquidityV2Factory", event: "LiquidityGaugeV2Created" },
+  async ({ event, context }) => {
   await handleLiquidityGaugeCreated(event, context, {
     isPreferentialGauge: false,
   });
-});
+}
+);
 
 // ================================================================
 // 3. ChildChainGaugeV1Factory — RewardsOnlyGaugeCreated
 // ================================================================
 
-ChildChainGaugeV1Factory.RewardsOnlyGaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeRewardsOnlyGauge(event.params.gauge);
-  context.addGaugeChildChainStreamer(event.params.streamer);
-});
+indexer.contractRegister(
+  { contract: "ChildChainGaugeV1Factory", event: "RewardsOnlyGaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeRewardsOnlyGauge.add(event.params.gauge);
+  context.chain.GaugeChildChainStreamer.add(event.params.streamer);
+}
+);
 
-ChildChainGaugeV1Factory.RewardsOnlyGaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ChildChainGaugeV1Factory", event: "RewardsOnlyGaugeCreated" },
+  async ({ event, context }) => {
   await handleLiquidityGaugeCreated(event, context, {
     isPreferentialGauge: true,
     streamer: event.params.streamer,
   });
-});
+}
+);
 
 // ================================================================
 // 4. ChildChainGaugeV2Factory — ChildChainGaugeV2Created
 // ================================================================
 
-ChildChainGaugeV2Factory.ChildChainGaugeV2Created.contractRegister(({ event, context }) => {
-  context.addGaugeLiquidityGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "ChildChainGaugeV2Factory", event: "ChildChainGaugeV2Created" },
+  async ({ event, context }) => {
+  context.chain.GaugeLiquidityGauge.add(event.params.gauge);
+}
+);
 
-ChildChainGaugeV2Factory.ChildChainGaugeV2Created.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ChildChainGaugeV2Factory", event: "ChildChainGaugeV2Created" },
+  async ({ event, context }) => {
   await handleLiquidityGaugeCreated(event, context, {
     isPreferentialGauge: true,
   });
-});
+}
+);
 
 // ================================================================
 // 5. SingleRecipientGaugeV1Factory — SingleRecipientGaugeCreated
 // ================================================================
 
-SingleRecipientGaugeV1Factory.SingleRecipientGaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeSingleRecipientGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "SingleRecipientGaugeV1Factory", event: "SingleRecipientGaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeSingleRecipientGauge.add(event.params.gauge);
+}
+);
 
-SingleRecipientGaugeV1Factory.SingleRecipientGaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SingleRecipientGaugeV1Factory", event: "SingleRecipientGaugeCreated" },
+  async ({ event, context }) => {
   await handleSingleRecipientGaugeCreated(event, context);
-});
+}
+);
 
 // ================================================================
 // 6. SingleRecipientGaugeV2Factory — SingleRecipientGaugeV2Created
 // ================================================================
 
-SingleRecipientGaugeV2Factory.SingleRecipientGaugeV2Created.contractRegister(({ event, context }) => {
-  context.addGaugeSingleRecipientGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "SingleRecipientGaugeV2Factory", event: "SingleRecipientGaugeV2Created" },
+  async ({ event, context }) => {
+  context.chain.GaugeSingleRecipientGauge.add(event.params.gauge);
+}
+);
 
-SingleRecipientGaugeV2Factory.SingleRecipientGaugeV2Created.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SingleRecipientGaugeV2Factory", event: "SingleRecipientGaugeV2Created" },
+  async ({ event, context }) => {
   await handleSingleRecipientGaugeCreated(event, context);
-});
+}
+);
 
 // ================================================================
 // 7. ArbitrumRootGaugeV1Factory — ArbitrumRootGaugeCreated
 // ================================================================
 
-ArbitrumRootGaugeV1Factory.ArbitrumRootGaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeRootGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "ArbitrumRootGaugeV1Factory", event: "ArbitrumRootGaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeRootGauge.add(event.params.gauge);
+}
+);
 
-ArbitrumRootGaugeV1Factory.ArbitrumRootGaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ArbitrumRootGaugeV1Factory", event: "ArbitrumRootGaugeCreated" },
+  async ({ event, context }) => {
   await handleRootGaugeCreated(event, context, "Arbitrum");
-});
+}
+);
 
 // ================================================================
 // 8. PolygonRootGaugeV1Factory — PolygonRootGaugeCreated
 // ================================================================
 
-PolygonRootGaugeV1Factory.PolygonRootGaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeRootGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "PolygonRootGaugeV1Factory", event: "PolygonRootGaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeRootGauge.add(event.params.gauge);
+}
+);
 
-PolygonRootGaugeV1Factory.PolygonRootGaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "PolygonRootGaugeV1Factory", event: "PolygonRootGaugeCreated" },
+  async ({ event, context }) => {
   await handleRootGaugeCreated(event, context, "Polygon");
-});
+}
+);
 
 // ================================================================
 // 9. OptimismRootGaugeV1Factory — OptimismRootGaugeCreated
 // ================================================================
 
-OptimismRootGaugeV1Factory.OptimismRootGaugeCreated.contractRegister(({ event, context }) => {
-  context.addGaugeRootGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "OptimismRootGaugeV1Factory", event: "OptimismRootGaugeCreated" },
+  async ({ event, context }) => {
+  context.chain.GaugeRootGauge.add(event.params.gauge);
+}
+);
 
-OptimismRootGaugeV1Factory.OptimismRootGaugeCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "OptimismRootGaugeV1Factory", event: "OptimismRootGaugeCreated" },
+  async ({ event, context }) => {
   await handleRootGaugeCreated(event, context, "Optimism");
-});
+}
+);
 
 // ================================================================
 // 10. RootGaugeV2Factory — RootGaugeV2Created
 // ================================================================
 
-RootGaugeV2Factory.RootGaugeV2Created.contractRegister(({ event, context }) => {
-  context.addGaugeRootGauge(event.params.gauge);
-});
+indexer.contractRegister(
+  { contract: "RootGaugeV2Factory", event: "RootGaugeV2Created" },
+  async ({ event, context }) => {
+  context.chain.GaugeRootGauge.add(event.params.gauge);
+}
+);
 
-RootGaugeV2Factory.RootGaugeV2Created.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "RootGaugeV2Factory", event: "RootGaugeV2Created" },
+  async ({ event, context }) => {
   const factoryAddress = event.srcAddress.toLowerCase();
   const chain = ROOT_GAUGE_V2_CHAIN_MAP[factoryAddress] ?? "Arbitrum";
   await handleRootGaugeCreated(event, context, chain);
-});
+}
+);

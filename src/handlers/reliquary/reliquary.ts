@@ -1,4 +1,4 @@
-import { ReliquaryContract, ReliquaryEmissionCurve } from "generated";
+import { indexer, type ReliquaryEmissionCurve } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_ADDRESS } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
@@ -71,15 +71,20 @@ function dayTimestamp(ts: number): number {
 // Dynamic contract registration for EmissionCurve
 // ================================
 
-ReliquaryContract.LogSetEmissionCurve.contractRegister(({ event, context }) => {
-  context.addReliquaryEmissionCurve(event.params.emissionCurveAddress);
-});
+indexer.contractRegister(
+  { contract: "ReliquaryContract", event: "LogSetEmissionCurve" },
+  async ({ event, context }) => {
+  context.chain.ReliquaryEmissionCurve.add(event.params.emissionCurveAddress);
+}
+);
 
 // ================================
 // LogPoolAddition
 // ================================
 
-ReliquaryContract.LogPoolAddition.handler(safeHandler("LogPoolAddition", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "LogPoolAddition" },
+  safeHandler("LogPoolAddition", async ({ event, context }) => {
   const { pid, allocPoint, poolToken, rewarder, nftDescriptor } = event.params;
   const chainId = event.chainId;
   const contractAddr = event.srcAddress;
@@ -232,13 +237,16 @@ ReliquaryContract.LogPoolAddition.handler(safeHandler("LogPoolAddition", async (
     totalAllocPoint: reliquary.totalAllocPoint + Number(allocPoint),
     poolCount: reliquary.poolCount + 1,
   });
-}));
+})
+);
 
 // ================================
 // LogPoolModified
 // ================================
 
-ReliquaryContract.LogPoolModified.handler(safeHandler("LogPoolModified", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "LogPoolModified" },
+  safeHandler("LogPoolModified", async ({ event, context }) => {
   const { pid, allocPoint, rewarder, nftDescriptor } = event.params;
   const chainId = event.chainId;
   const contractAddr = event.srcAddress;
@@ -303,13 +311,16 @@ ReliquaryContract.LogPoolModified.handler(safeHandler("LogPoolModified", async (
     ...reliquary,
     totalAllocPoint: reliquary.totalAllocPoint - oldAllocPoint + Number(allocPoint),
   });
-}));
+})
+);
 
 // ================================
 // LogSetEmissionCurve
 // ================================
 
-ReliquaryContract.LogSetEmissionCurve.handler(safeHandler("LogSetEmissionCurve", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "LogSetEmissionCurve" },
+  safeHandler("LogSetEmissionCurve", async ({ event, context }) => {
   const chainId = event.chainId;
   const contractAddr = event.srcAddress;
   const curveAddress = event.params.emissionCurveAddress.toLowerCase();
@@ -330,13 +341,16 @@ ReliquaryContract.LogSetEmissionCurve.handler(safeHandler("LogSetEmissionCurve",
   if (reliquary) {
     context.Reliquary.set({ ...reliquary, emissionCurve_id: ecId });
   }
-}));
+})
+);
 
 // ================================
 // Deposit
 // ================================
 
-ReliquaryContract.Deposit.handler(safeHandler("Deposit", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Deposit" },
+  safeHandler("Deposit", async ({ event, context }) => {
   const { pid, amount, relicId } = event.params;
   const chainId = event.chainId;
   const pidNum = Number(pid);
@@ -424,13 +438,16 @@ ReliquaryContract.Deposit.handler(safeHandler("Deposit", async ({ event, context
       level: relic.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // Withdraw
 // ================================
 
-ReliquaryContract.Withdraw.handler(safeHandler("Withdraw", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Withdraw" },
+  safeHandler("Withdraw", async ({ event, context }) => {
   const { pid, amount, relicId } = event.params;
   const chainId = event.chainId;
   const pidNum = Number(pid);
@@ -499,13 +516,16 @@ ReliquaryContract.Withdraw.handler(safeHandler("Withdraw", async ({ event, conte
       level: relic.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // EmergencyWithdraw
 // ================================
 
-ReliquaryContract.EmergencyWithdraw.handler(safeHandler("EmergencyWithdraw", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "EmergencyWithdraw" },
+  safeHandler("EmergencyWithdraw", async ({ event, context }) => {
   const { pid, amount, relicId } = event.params;
   const chainId = event.chainId;
   const pidNum = Number(pid);
@@ -572,13 +592,16 @@ ReliquaryContract.EmergencyWithdraw.handler(safeHandler("EmergencyWithdraw", asy
       level: relic.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // Harvest
 // ================================
 
-ReliquaryContract.Harvest.handler(safeHandler("Harvest", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Harvest" },
+  safeHandler("Harvest", async ({ event, context }) => {
   const { pid, amount, to, relicId } = event.params;
   if (amount === 0n) return;
 
@@ -611,13 +634,16 @@ ReliquaryContract.Harvest.handler(safeHandler("Harvest", async ({ event, context
     relic_id: rId,
     user_id: userId,
   });
-}));
+})
+);
 
 // ================================
 // LevelChanged
 // ================================
 
-ReliquaryContract.LevelChanged.handler(safeHandler("LevelChanged", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "LevelChanged" },
+  safeHandler("LevelChanged", async ({ event, context }) => {
   const { relicId, newLevel } = event.params;
   const chainId = event.chainId;
   const relicIdNum = Number(relicId);
@@ -664,13 +690,16 @@ ReliquaryContract.LevelChanged.handler(safeHandler("LevelChanged", async ({ even
       level: newLevelNum,
     });
   }
-}));
+})
+);
 
 // ================================
 // Split
 // ================================
 
-ReliquaryContract.Split.handler(safeHandler("Split", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Split" },
+  safeHandler("Split", async ({ event, context }) => {
   const { fromId, toId, amount } = event.params;
   const chainId = event.chainId;
   const ts = Number(event.block.timestamp);
@@ -724,13 +753,16 @@ ReliquaryContract.Split.handler(safeHandler("Split", async ({ event, context }) 
       level: relicFrom.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // Shift
 // ================================
 
-ReliquaryContract.Shift.handler(safeHandler("Shift", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Shift" },
+  safeHandler("Shift", async ({ event, context }) => {
   const { fromId, toId, amount } = event.params;
   const chainId = event.chainId;
   const ts = Number(event.block.timestamp);
@@ -800,13 +832,16 @@ ReliquaryContract.Shift.handler(safeHandler("Shift", async ({ event, context }) 
       level: relicTo.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // Merge
 // ================================
 
-ReliquaryContract.Merge.handler(safeHandler("Merge", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Merge" },
+  safeHandler("Merge", async ({ event, context }) => {
   const { fromId, toId, amount } = event.params;
   const chainId = event.chainId;
   const ts = Number(event.block.timestamp);
@@ -873,13 +908,16 @@ ReliquaryContract.Merge.handler(safeHandler("Merge", async ({ event, context }) 
       level: relicTo.level,
     });
   }
-}));
+})
+);
 
 // ================================
 // Transfer (mint / burn / transfer)
 // ================================
 
-ReliquaryContract.Transfer.handler(safeHandler("Transfer", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryContract", event: "Transfer" },
+  safeHandler("Transfer", async ({ event, context }) => {
   const { from, to, tokenId } = event.params;
   const chainId = event.chainId;
   const relicIdNum = Number(tokenId);
@@ -1011,13 +1049,16 @@ ReliquaryContract.Transfer.handler(safeHandler("Transfer", async ({ event, conte
       context.ReliquaryDailyRelicSnapshot.set({ ...relicSnap, user_id: userId, userAddress: to.toLowerCase() });
     }
   }
-}));
+})
+);
 
 // ================================
 // EmissionCurve LogRate
 // ================================
 
-ReliquaryEmissionCurve.LogRate.handler(safeHandler("LogRate", async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "ReliquaryEmissionCurve", event: "LogRate" },
+  safeHandler("LogRate", async ({ event, context }) => {
   const chainId = event.chainId;
   const curveAddress = event.srcAddress.toLowerCase();
   const ecId = emissionCurveId(chainId, curveAddress);
@@ -1035,4 +1076,5 @@ ReliquaryEmissionCurve.LogRate.handler(safeHandler("LogRate", async ({ event, co
       rewardPerSecond: scaleDown(event.params.rate, 18),
     });
   }
-}));
+})
+);

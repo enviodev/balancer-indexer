@@ -1,4 +1,4 @@
-import { V3StableSurgeHook, V3StableSurgeHookV2, V3StableSurgeHookV3, type V3StableSurgeParams } from "generated";
+import { indexer, type V3StableSurgeParams } from "envio";
 import { ZERO_BD } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
 import { makeChainId } from "../../utils/entities.js";
@@ -61,14 +61,23 @@ async function handleStableSurgeRegistered(
   });
 }
 
-V3StableSurgeHook.StableSurgeHookRegistered.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StableSurgeHook", event: "StableSurgeHookRegistered" },
+  async ({ event, context }) => {
   await handleStableSurgeRegistered(event, context, 1);
-});
+}
+);
 
-V3StableSurgeHookV2.StableSurgeHookRegistered.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StableSurgeHookV2", event: "StableSurgeHookRegistered" },
+  async ({ event, context }) => {
   await handleStableSurgeRegistered(event, context, 2);
-});
+}
+);
 
-V3StableSurgeHookV3.StableSurgeHookRegistered.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3StableSurgeHookV3", event: "StableSurgeHookRegistered" },
+  async ({ event, context }) => {
   await handleStableSurgeRegistered(event, context, 3);
-});
+}
+);

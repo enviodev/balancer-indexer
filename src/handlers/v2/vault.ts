@@ -1,4 +1,4 @@
-import { V2Vault } from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_ADDRESS, V2_VAULT_ADDRESS } from "../../utils/constants.js";
 import { scaleDown, tokenToDecimal } from "../../utils/math.js";
@@ -30,7 +30,9 @@ const DAY = 24 * 60 * 60;
 // Swap
 // ================================
 
-V2Vault.Swap.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Vault", event: "Swap" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = event.params.poolId;
   const poolAddress = poolId.slice(0, 42).toLowerCase();
@@ -263,13 +265,16 @@ V2Vault.Swap.handler(async ({ event, context }) => {
 
   // Update snapshots
   await updateV2BalancerSnapshot(vault, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Pool Balance Changed (Join/Exit)
 // ================================
 
-V2Vault.PoolBalanceChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Vault", event: "PoolBalanceChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = event.params.poolId;
   const poolAddress = poolId.slice(0, 42).toLowerCase();
@@ -354,13 +359,16 @@ V2Vault.PoolBalanceChanged.handler(async ({ event, context }) => {
 
   // Update pool liquidity after join/exit
   await updatePoolLiquidity(poolEntityId, event.block.number, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Pool Balance Managed
 // ================================
 
-V2Vault.PoolBalanceManaged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Vault", event: "PoolBalanceManaged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = event.params.poolId;
   const poolAddress = poolId.slice(0, 42).toLowerCase();
@@ -408,13 +416,16 @@ V2Vault.PoolBalanceManaged.handler(async ({ event, context }) => {
   // Update pool liquidity after balance management
   const poolEntityId = makeChainId(chainId, poolAddress);
   await updatePoolLiquidity(poolEntityId, event.block.number, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Internal Balance Changed
 // ================================
 
-V2Vault.InternalBalanceChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Vault", event: "InternalBalanceChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.user.toLowerCase();
   const tokenAddress = event.params.token.toLowerCase();
@@ -452,7 +463,8 @@ V2Vault.InternalBalanceChanged.handler(async ({ event, context }) => {
     ...internalBalance,
     balance: internalBalance.balance.plus(deltaDecimal),
   });
-});
+}
+);
 
 // ================================
 // Helpers

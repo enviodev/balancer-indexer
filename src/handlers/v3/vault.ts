@@ -1,18 +1,4 @@
-import {
-  V3Vault,
-  type V3Pool,
-  type V3PoolToken,
-  type V3Hook,
-  type V3HookConfig,
-  type V3LiquidityManagement,
-  type V3RateProvider,
-  type V3Buffer,
-  type V3BufferShare,
-  type V3Swap,
-  type V3AddRemove,
-  type Token,
-  type User,
-} from "generated";
+import { indexer, type V3Vault, type V3Pool, type V3PoolToken, type V3Hook, type V3HookConfig, type V3LiquidityManagement, type V3RateProvider, type V3Buffer, type V3BufferShare, type V3Swap, type V3AddRemove, type Token, type User } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_ADDRESS, ZERO_BD, ZERO_BI, VAULT_ADDRESS, FEE_SCALING_FACTOR } from "../../utils/constants.js";
 import { scaleDown, mulDownSwapFee, hexToBigInt, tokenToDecimal } from "../../utils/math.js";
@@ -36,11 +22,16 @@ import { getProtocolFeeController, getStaticSwapFeePercentage, getPoolTokenBalan
 // Pool Registration
 // ================================
 
-V3Vault.PoolRegistered.contractRegister(({ event, context }) => {
-  context.addV3BPT(event.params.pool);
-});
+indexer.contractRegister(
+  { contract: "V3Vault", event: "PoolRegistered" },
+  async ({ event, context }) => {
+  context.chain.V3BPT.add(event.params.pool);
+}
+);
 
-V3Vault.PoolRegistered.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "PoolRegistered" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const vaultId = makeChainId(chainId, event.srcAddress);
@@ -197,13 +188,16 @@ V3Vault.PoolRegistered.handler(async ({ event, context }) => {
   const timestamp = event.block.timestamp;
   const snapshot = defaultV3PoolSnapshot(chainId, poolAddress, timestamp);
   context.V3PoolSnapshot.set(snapshot);
-});
+}
+);
 
 // ================================
 // Liquidity Added
 // ================================
 
-V3Vault.LiquidityAdded.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "LiquidityAdded" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const poolId = makeChainId(chainId, poolAddress);
@@ -270,13 +264,16 @@ V3Vault.LiquidityAdded.handler(async ({ event, context }) => {
   // Update yield fees and snapshot
   await updateProtocolYieldFeeAmounts(pool, event.srcAddress, chainId, event.block.number, context);
   await createPoolSnapshot(pool, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Liquidity Removed
 // ================================
 
-V3Vault.LiquidityRemoved.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "LiquidityRemoved" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const poolId = makeChainId(chainId, poolAddress);
@@ -335,13 +332,16 @@ V3Vault.LiquidityRemoved.handler(async ({ event, context }) => {
 
   await updateProtocolYieldFeeAmounts(pool, event.srcAddress, chainId, event.block.number, context);
   await createPoolSnapshot(pool, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Swap
 // ================================
 
-V3Vault.Swap.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "Swap" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const poolId = makeChainId(chainId, poolAddress);
@@ -469,13 +469,16 @@ V3Vault.Swap.handler(async ({ event, context }) => {
 
   await updateProtocolYieldFeeAmounts(pool, event.srcAddress, chainId, event.block.number, context);
   await createPoolSnapshot(pool, event.block.timestamp, chainId, context);
-});
+}
+);
 
 // ================================
 // Buffer Events
 // ================================
 
-V3Vault.LiquidityAddedToBuffer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "LiquidityAddedToBuffer" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const wrappedTokenAddress = event.params.wrappedToken;
   const bufferId = makeChainId(chainId, wrappedTokenAddress);
@@ -515,9 +518,12 @@ V3Vault.LiquidityAddedToBuffer.handler(async ({ event, context }) => {
     wrappedBalance: buffer.wrappedBalance.plus(amountWrapped),
     underlyingBalance: buffer.underlyingBalance.plus(amountUnderlying),
   });
-});
+}
+);
 
-V3Vault.LiquidityRemovedFromBuffer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "LiquidityRemovedFromBuffer" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const bufferId = makeChainId(chainId, event.params.wrappedToken);
 
@@ -535,9 +541,12 @@ V3Vault.LiquidityRemovedFromBuffer.handler(async ({ event, context }) => {
     wrappedBalance: buffer.wrappedBalance.minus(amountWrapped),
     underlyingBalance: buffer.underlyingBalance.minus(amountUnderlying),
   });
-});
+}
+);
 
-V3Vault.BufferSharesMinted.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "BufferSharesMinted" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userId = makeChainId(chainId, event.params.to);
   const user = await context.User.get(userId);
@@ -558,9 +567,12 @@ V3Vault.BufferSharesMinted.handler(async ({ event, context }) => {
     share = { id: shareId, user_id: userId, buffer_id: bufferId, balance: ZERO_BD };
   }
   context.V3BufferShare.set({ ...share, balance: share.balance.plus(issuedShares) });
-});
+}
+);
 
-V3Vault.BufferSharesBurned.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "BufferSharesBurned" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userId = makeChainId(chainId, event.params.from);
   const user = await context.User.get(userId);
@@ -581,9 +593,12 @@ V3Vault.BufferSharesBurned.handler(async ({ event, context }) => {
     share = { id: shareId, user_id: userId, buffer_id: bufferId, balance: ZERO_BD };
   }
   context.V3BufferShare.set({ ...share, balance: share.balance.minus(burnedShares) });
-});
+}
+);
 
-V3Vault.Wrap.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "Wrap" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const bufferId = makeChainId(chainId, event.params.wrappedToken);
   const buffer = await context.V3Buffer.get(bufferId);
@@ -601,9 +616,12 @@ V3Vault.Wrap.handler(async ({ event, context }) => {
     wrappedBalance: scaleDown(hexToBigInt(wrappedBalanceHex), underlyingToken?.decimals ?? 18),
     underlyingBalance: scaleDown(hexToBigInt(underlyingBalanceHex), wrappedToken?.decimals ?? 18),
   });
-});
+}
+);
 
-V3Vault.Unwrap.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "Unwrap" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const bufferId = makeChainId(chainId, event.params.wrappedToken);
   const buffer = await context.V3Buffer.get(bufferId);
@@ -621,13 +639,16 @@ V3Vault.Unwrap.handler(async ({ event, context }) => {
     underlyingBalance: scaleDown(hexToBigInt(underlyingBalanceHex), wrappedToken?.decimals ?? 18),
     wrappedBalance: scaleDown(hexToBigInt(wrappedBalanceHex), underlyingToken?.decimals ?? 18),
   });
-});
+}
+);
 
 // ================================
 // Pool State Changes
 // ================================
 
-V3Vault.SwapFeePercentageChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "SwapFeePercentageChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = makeChainId(chainId, event.params.pool);
   const pool = await context.V3Pool.get(poolId);
@@ -636,29 +657,39 @@ V3Vault.SwapFeePercentageChanged.handler(async ({ event, context }) => {
   // Replicate smart contract rounding behavior
   const roundedSwapFee = (event.params.swapFeePercentage / FEE_SCALING_FACTOR) * FEE_SCALING_FACTOR;
   context.V3Pool.set({ ...pool, swapFee: scaleDown(roundedSwapFee, 18) });
-});
+}
+);
 
-V3Vault.PoolRecoveryModeStateChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "PoolRecoveryModeStateChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.params.pool);
   const pool = await context.V3Pool.get(poolId);
   if (!pool) return;
   context.V3Pool.set({ ...pool, isInRecoveryMode: event.params.recoveryMode });
-});
+}
+);
 
-V3Vault.PoolPausedStateChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "PoolPausedStateChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.params.pool);
   const pool = await context.V3Pool.get(poolId);
   if (!pool) return;
   context.V3Pool.set({ ...pool, isPaused: event.params.paused });
-});
+}
+);
 
-V3Vault.ProtocolFeeControllerChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V3Vault", event: "ProtocolFeeControllerChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const vaultId = makeChainId(chainId, event.srcAddress);
   const vault = await context.V3Vault.get(vaultId);
   if (!vault) return;
   context.V3Vault.set({ ...vault, protocolFeeController: event.params.newProtocolFeeController });
-});
+}
+);
 
 // ================================
 // Helpers

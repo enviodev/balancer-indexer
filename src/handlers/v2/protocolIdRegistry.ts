@@ -1,7 +1,9 @@
-import { V2ProtocolIdRegistry } from "generated";
+import { indexer } from "envio";
 import { makeChainId } from "../../utils/entities.js";
 
-V2ProtocolIdRegistry.ProtocolIdRegistered.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2ProtocolIdRegistry", event: "ProtocolIdRegistered" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const protocolId = Number(event.params.protocolId);
   const id = `${chainId}-${protocolId}`;
@@ -10,9 +12,12 @@ V2ProtocolIdRegistry.ProtocolIdRegistered.handler(async ({ event, context }) => 
     id,
     name: event.params.name,
   });
-});
+}
+);
 
-V2ProtocolIdRegistry.ProtocolIdRenamed.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2ProtocolIdRegistry", event: "ProtocolIdRenamed" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const protocolId = Number(event.params.protocolId);
   const id = `${chainId}-${protocolId}`;
@@ -29,4 +34,5 @@ V2ProtocolIdRegistry.ProtocolIdRenamed.handler(async ({ event, context }) => {
       name: event.params.name,
     });
   }
-});
+}
+);

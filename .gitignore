@@ -34,3 +34,4 @@ generated
 .env
 .DS_Store
 .pnpm-store
+.envio/

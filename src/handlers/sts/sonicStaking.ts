@@ -1,4 +1,4 @@
-import { SonicStakingContract } from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
@@ -103,23 +103,31 @@ async function updateStakingAndSnapshot(context: any, chainId: number, contractA
 // Deposited
 // ================================
 
-SonicStakingContract.Deposited.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "Deposited" },
+  async ({ event, context }) => {
   await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // Donated
 // ================================
 
-SonicStakingContract.Donated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "Donated" },
+  async ({ event, context }) => {
   await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // Delegated
 // ================================
 
-SonicStakingContract.Delegated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "Delegated" },
+  async ({ event, context }) => {
   const { validatorId: valId, amountAssets } = event.params;
   const chainId = event.chainId;
 
@@ -130,13 +138,16 @@ SonicStakingContract.Delegated.handler(async ({ event, context }) => {
   });
 
   await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // Undelegated
 // ================================
 
-SonicStakingContract.Undelegated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "Undelegated" },
+  async ({ event, context }) => {
   const { validatorId: valId, amountAssets } = event.params;
   const chainId = event.chainId;
 
@@ -147,13 +158,16 @@ SonicStakingContract.Undelegated.handler(async ({ event, context }) => {
   });
 
   await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // OperatorClawBackInitiated
 // ================================
 
-SonicStakingContract.OperatorClawBackInitiated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "OperatorClawBackInitiated" },
+  async ({ event, context }) => {
   const { validatorId: valId, amountAssets } = event.params;
   const chainId = event.chainId;
 
@@ -164,21 +178,27 @@ SonicStakingContract.OperatorClawBackInitiated.handler(async ({ event, context }
   });
 
   await updateStakingAndSnapshot(context, chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // OperatorClawBackExecuted
 // ================================
 
-SonicStakingContract.OperatorClawBackExecuted.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "OperatorClawBackExecuted" },
+  async ({ event, context }) => {
   await updateStakingAndSnapshot(context, event.chainId, event.srcAddress, Number(event.block.timestamp));
-});
+}
+);
 
 // ================================
 // RewardsClaimed
 // ================================
 
-SonicStakingContract.RewardsClaimed.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SonicStakingContract", event: "RewardsClaimed" },
+  async ({ event, context }) => {
   const { amountClaimed, protocolFee } = event.params;
   const chainId = event.chainId;
   const ts = Number(event.block.timestamp);
@@ -204,4 +224,5 @@ SonicStakingContract.RewardsClaimed.handler(async ({ event, context }) => {
 
   // Then update on-chain state (single RPC call)
   await updateStakingAndSnapshot(context, chainId, event.srcAddress, ts);
-});
+}
+);

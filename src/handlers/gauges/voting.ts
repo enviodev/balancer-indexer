@@ -1,9 +1,4 @@
-import {
-  VotingEscrowContract,
-  GaugeController,
-  OmniVotingEscrow,
-  OmniVotingEscrowChild,
-} from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_BI } from "../../utils/constants.js";
 import { scaleDown } from "../../utils/math.js";
@@ -15,7 +10,9 @@ const LOCK_MAXTIME = 365n * 86400n; // 1 year in seconds
 // VotingEscrowContract handlers
 // ================================
 
-VotingEscrowContract.Deposit.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "VotingEscrowContract", event: "Deposit" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.provider.toLowerCase();
   const escrowAddress = event.srcAddress.toLowerCase();
@@ -31,7 +28,7 @@ VotingEscrowContract.Deposit.handler(async ({ event, context }) => {
   let lock = await context.VotingEscrowLock.get(lockId);
 
   const depositAmount = scaleDown(event.params.value, 18);
-  const blockTimestamp = event.block.timestamp;
+  const blockTimestamp = event.block!.timestamp;
 
   if (!lock) {
     lock = {
@@ -47,7 +44,7 @@ VotingEscrowContract.Deposit.handler(async ({ event, context }) => {
     };
   }
 
-  const newLockedBalance = lock.lockedBalance.plus(depositAmount);
+  const newLockedBalance = lock!.lockedBalance.plus(depositAmount);
   const unlockTime = event.params.locktime;
 
   // Calculate slope and bias
@@ -76,9 +73,12 @@ VotingEscrowContract.Deposit.handler(async ({ event, context }) => {
     bias: scaleDown(biasBI, 18),
     timestamp: Number(blockTimestamp),
   });
-});
+}
+);
 
-VotingEscrowContract.Withdraw.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "VotingEscrowContract", event: "Withdraw" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.provider.toLowerCase();
   const escrowAddress = event.srcAddress.toLowerCase();
@@ -98,11 +98,14 @@ VotingEscrowContract.Withdraw.handler(async ({ event, context }) => {
     lockedBalance: ZERO_BD,
     bias: ZERO_BD,
     slope: ZERO_BD,
-    updatedAt: Number(event.block.timestamp),
+    updatedAt: Number(event.block!.timestamp),
   });
-});
+}
+);
 
-VotingEscrowContract.Supply.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "VotingEscrowContract", event: "Supply" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const escrowAddress = event.srcAddress.toLowerCase();
   const escrowId = makeChainId(chainId, escrowAddress);
@@ -116,13 +119,16 @@ VotingEscrowContract.Supply.handler(async ({ event, context }) => {
     ...escrow,
     stakedSupply: scaleDown(event.params.supply, 18),
   });
-});
+}
+);
 
 // ================================
 // GaugeController handlers
 // ================================
 
-GaugeController.AddType.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeController", event: "AddType" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const typeId = `${chainId}-${event.params.type_id}`;
 
@@ -130,9 +136,12 @@ GaugeController.AddType.handler(async ({ event, context }) => {
     id: typeId,
     name: event.params.name,
   });
-});
+}
+);
 
-GaugeController.NewGauge.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeController", event: "NewGauge" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const gaugeAddress = event.params.addr.toLowerCase();
   const gaugeType = event.params.gauge_type;
@@ -150,7 +159,7 @@ GaugeController.NewGauge.handler(async ({ event, context }) => {
     id: gaugeId,
     address: gaugeAddress,
     type_id: typeId,
-    addedTimestamp: Number(event.block.timestamp),
+    addedTimestamp: Number(event.block!.timestamp),
     liquidityGauge_id: liquidityGauge ? liquidityGaugeId : undefined,
     rootGauge_id: rootGauge ? liquidityGaugeId : undefined,
   });
@@ -194,9 +203,12 @@ GaugeController.NewGauge.handler(async ({ event, context }) => {
       }
     }
   }
-});
+}
+);
 
-GaugeController.VoteForGauge.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "GaugeController", event: "VoteForGauge" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.user.toLowerCase();
   const gaugeAddress = event.params.gauge_addr.toLowerCase();
@@ -231,13 +243,16 @@ GaugeController.VoteForGauge.handler(async ({ event, context }) => {
     weight: scaleDown(event.params.weight, 18),
     timestamp: event.params.time,
   });
-});
+}
+);
 
 // ================================
 // OmniVotingEscrow handlers
 // ================================
 
-OmniVotingEscrow.UserBalToChain.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "OmniVotingEscrow", event: "UserBalToChain" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.localUser.toLowerCase();
   const contractAddress = event.srcAddress.toLowerCase();
@@ -267,13 +282,16 @@ OmniVotingEscrow.UserBalToChain.handler(async ({ event, context }) => {
     // Hardcoded mainnet VE address
     votingEscrowID_id: `${chainId}-0xc128a9954e6c874ea3d62ce62b468ba073093f25`,
   });
-});
+}
+);
 
 // ================================
 // OmniVotingEscrowChild handlers
 // ================================
 
-OmniVotingEscrowChild.UserBalFromChain.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "OmniVotingEscrowChild", event: "UserBalFromChain" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const userAddress = event.params.user.toLowerCase();
   const escrowAddress = event.srcAddress.toLowerCase();
@@ -319,6 +337,7 @@ OmniVotingEscrowChild.UserBalFromChain.handler(async ({ event, context }) => {
     bias: scaleDown(absBias, 18),
     timestamp: ts,
     unlockTime,
-    updatedAt: Number(event.block.timestamp),
+    updatedAt: Number(event.block!.timestamp),
   });
-});
+}
+);

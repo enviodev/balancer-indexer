@@ -1,4 +1,4 @@
-import { V2PoolFactory } from "generated";
+import { indexer } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_BI, ZERO_ADDRESS, V2_VAULT_ADDRESS } from "../../utils/constants.js";
 import { scaleDown, tokenToDecimal } from "../../utils/math.js";
@@ -30,15 +30,20 @@ import { getPoolTokens } from "../../effects/v2Vault.js";
 // Pool Created - Contract Registration
 // ================================
 
-V2PoolFactory.PoolCreated.contractRegister(({ event, context }) => {
-  context.addV2Pool(event.params.pool);
-});
+indexer.contractRegister(
+  { contract: "V2PoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
+  context.chain.V2Pool.add(event.params.pool);
+}
+);
 
 // ================================
 // Pool Created - Handler
 // ================================
 
-V2PoolFactory.PoolCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2PoolFactory", event: "PoolCreated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.params.pool;
   const factoryAddress = event.srcAddress;
@@ -262,4 +267,5 @@ V2PoolFactory.PoolCreated.handler(async ({ event, context }) => {
     ...vault,
     poolCount: vault.poolCount + 1,
   });
-});
+}
+);

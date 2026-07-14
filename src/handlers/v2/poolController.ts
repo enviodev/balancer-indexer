@@ -1,4 +1,4 @@
-import { V2Pool } from "generated";
+import { indexer, type V2Pool } from "envio";
 import BigDecimal from "bignumber.js";
 import { ZERO_BD, ZERO_BI, ZERO_ADDRESS, V2_VAULT_ADDRESS, ONE_BD } from "../../utils/constants.js";
 import { scaleDown, tokenToDecimal } from "../../utils/math.js";
@@ -12,7 +12,9 @@ const BPT_DECIMALS = 18;
 // Transfer — BPT share tracking
 // =============================================================================
 
-V2Pool.Transfer.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "Transfer" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -94,13 +96,16 @@ V2Pool.Transfer.handler(async ({ event, context }) => {
   }
 
   context.V2Pool.set(updatedPool);
-});
+}
+);
 
 // =============================================================================
 // SwapFeePercentageChanged
 // =============================================================================
 
-V2Pool.SwapFeePercentageChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "SwapFeePercentageChanged" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = makeChainId(chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
@@ -124,13 +129,16 @@ V2Pool.SwapFeePercentageChanged.handler(async ({ event, context }) => {
     startSwapFeePercentage: newSwapFee,
     endSwapFeePercentage: newSwapFee,
   });
-});
+}
+);
 
 // =============================================================================
 // PausedStateChanged
 // =============================================================================
 
-V2Pool.PausedStateChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "PausedStateChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -147,13 +155,16 @@ V2Pool.PausedStateChanged.handler(async ({ event, context }) => {
     isPaused,
     swapEnabled,
   });
-});
+}
+);
 
 // =============================================================================
 // RecoveryModeStateChanged
 // =============================================================================
 
-V2Pool.RecoveryModeStateChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "RecoveryModeStateChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -171,13 +182,16 @@ V2Pool.RecoveryModeStateChanged.handler(async ({ event, context }) => {
   }
 
   context.V2Pool.set(update);
-});
+}
+);
 
 // =============================================================================
 // AmpUpdateStarted
 // =============================================================================
 
-V2Pool.AmpUpdateStarted.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "AmpUpdateStarted" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -210,13 +224,16 @@ V2Pool.AmpUpdateStarted.handler(async ({ event, context }) => {
     latestAmpUpdate_id: ampUpdateId,
     amp: currentAmp,
   });
-});
+}
+);
 
 // =============================================================================
 // AmpUpdateStopped
 // =============================================================================
 
-V2Pool.AmpUpdateStopped.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "AmpUpdateStopped" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -225,13 +242,16 @@ V2Pool.AmpUpdateStopped.handler(async ({ event, context }) => {
     ...pool,
     amp: event.params.currentValue,
   });
-});
+}
+);
 
 // =============================================================================
 // SwapEnabledSet
 // =============================================================================
 
-V2Pool.SwapEnabledSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "SwapEnabledSet" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -241,13 +261,16 @@ V2Pool.SwapEnabledSet.handler(async ({ event, context }) => {
     swapEnabledInternal: event.params.swapEnabled,
     swapEnabled: event.params.swapEnabled,
   });
-});
+}
+);
 
 // =============================================================================
 // GradualWeightUpdateScheduled
 // =============================================================================
 
-V2Pool.GradualWeightUpdateScheduled.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "GradualWeightUpdateScheduled" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -265,13 +288,16 @@ V2Pool.GradualWeightUpdateScheduled.handler(async ({ event, context }) => {
     startWeights: event.params.startWeights,
     endWeights: event.params.endWeights,
   });
-});
+}
+);
 
 // =============================================================================
 // OracleEnabledChanged
 // =============================================================================
 
-V2Pool.OracleEnabledChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "OracleEnabledChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -280,13 +306,16 @@ V2Pool.OracleEnabledChanged.handler(async ({ event, context }) => {
     ...pool,
     oracleEnabled: event.params.enabled,
   });
-});
+}
+);
 
 // =============================================================================
 // TargetsSet — Linear pool targets
 // =============================================================================
 
-V2Pool.TargetsSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "TargetsSet" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -296,13 +325,16 @@ V2Pool.TargetsSet.handler(async ({ event, context }) => {
     lowerTarget: scaleDown(event.params.lowerTarget, 18),
     upperTarget: scaleDown(event.params.upperTarget, 18),
   });
-});
+}
+);
 
 // =============================================================================
 // PausedLocally — Gyro pool pause
 // =============================================================================
 
-V2Pool.PausedLocally.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "PausedLocally" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -312,13 +344,16 @@ V2Pool.PausedLocally.handler(async ({ event, context }) => {
     swapEnabledInternal: false,
     swapEnabled: false,
   });
-});
+}
+);
 
 // =============================================================================
 // UnpausedLocally — Gyro pool unpause
 // =============================================================================
 
-V2Pool.UnpausedLocally.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "UnpausedLocally" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -328,13 +363,16 @@ V2Pool.UnpausedLocally.handler(async ({ event, context }) => {
     swapEnabledInternal: true,
     swapEnabled: true,
   });
-});
+}
+);
 
 // =============================================================================
 // ProtocolFeePercentageCacheUpdated
 // =============================================================================
 
-V2Pool.ProtocolFeePercentageCacheUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "ProtocolFeePercentageCacheUpdated" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -352,7 +390,8 @@ V2Pool.ProtocolFeePercentageCacheUpdated.handler(async ({ event, context }) => {
     // AUM fee
     context.V2Pool.set({ ...pool, protocolAumFeeCache: feeValue });
   }
-});
+}
+);
 
 // =============================================================================
 // Helpers
@@ -392,7 +431,9 @@ export function calculateAmp(
 // PriceRateProviderSet — MetaStable pools
 // =============================================================================
 
-V2Pool.PriceRateProviderSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "PriceRateProviderSet" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -416,13 +457,16 @@ V2Pool.PriceRateProviderSet.handler(async ({ event, context }) => {
     cacheDuration,
     cacheExpiry: event.block.timestamp + cacheDuration,
   });
-});
+}
+);
 
 // =============================================================================
 // PriceRateCacheUpdated — MetaStable pools
 // =============================================================================
 
-V2Pool.PriceRateCacheUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "PriceRateCacheUpdated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -449,13 +493,16 @@ V2Pool.PriceRateCacheUpdated.handler(async ({ event, context }) => {
       priceRate: rate,
     });
   }
-});
+}
+);
 
 // =============================================================================
 // TokenRateProviderSet — ComposableStable pools (uses tokenIndex instead of address)
 // =============================================================================
 
-V2Pool.TokenRateProviderSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "TokenRateProviderSet" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -483,13 +530,16 @@ V2Pool.TokenRateProviderSet.handler(async ({ event, context }) => {
     cacheDuration,
     cacheExpiry: event.block.timestamp + cacheDuration,
   });
-});
+}
+);
 
 // =============================================================================
 // TokenRateCacheUpdated — ComposableStable pools (uses tokenIndex instead of address)
 // =============================================================================
 
-V2Pool.TokenRateCacheUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "TokenRateCacheUpdated" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -522,13 +572,16 @@ V2Pool.TokenRateCacheUpdated.handler(async ({ event, context }) => {
       priceRate: rate,
     });
   }
-});
+}
+);
 
 // =============================================================================
 // MustAllowlistLPsSet — Managed pools
 // =============================================================================
 
-V2Pool.MustAllowlistLPsSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "MustAllowlistLPsSet" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -537,13 +590,16 @@ V2Pool.MustAllowlistLPsSet.handler(async ({ event, context }) => {
     ...pool,
     mustAllowlistLPs: event.params.mustAllowlistLPs,
   });
-});
+}
+);
 
 // =============================================================================
 // JoinExitEnabledSet — Managed pools
 // =============================================================================
 
-V2Pool.JoinExitEnabledSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "JoinExitEnabledSet" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -552,13 +608,16 @@ V2Pool.JoinExitEnabledSet.handler(async ({ event, context }) => {
     ...pool,
     joinExitEnabled: event.params.joinExitEnabled,
   });
-});
+}
+);
 
 // =============================================================================
 // CircuitBreakerSet — Managed pools
 // =============================================================================
 
-V2Pool.CircuitBreakerSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "CircuitBreakerSet" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -586,13 +645,16 @@ V2Pool.CircuitBreakerSet.handler(async ({ event, context }) => {
       circuitBreaker_id: cbId,
     });
   }
-});
+}
+);
 
 // =============================================================================
 // TokenAdded — Managed pools (dynamic token management)
 // =============================================================================
 
-V2Pool.TokenAdded.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "TokenAdded" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -609,13 +671,16 @@ V2Pool.TokenAdded.handler(async ({ event, context }) => {
     ...pool,
     tokensList,
   });
-});
+}
+);
 
 // =============================================================================
 // TokenRemoved — Managed pools (dynamic token management)
 // =============================================================================
 
-V2Pool.TokenRemoved.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "TokenRemoved" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolAddress = event.srcAddress;
   const poolId = makeChainId(chainId, poolAddress);
@@ -631,13 +696,16 @@ V2Pool.TokenRemoved.handler(async ({ event, context }) => {
     ...pool,
     tokensList,
   });
-});
+}
+);
 
 // =============================================================================
 // ManagementAumFeeCollected — Managed pools
 // =============================================================================
 
-V2Pool.ManagementAumFeeCollected.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "ManagementAumFeeCollected" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -649,13 +717,16 @@ V2Pool.ManagementAumFeeCollected.handler(async ({ event, context }) => {
     ...pool,
     totalAumFeeCollectedInBPT: totalCollected,
   });
-});
+}
+);
 
 // =============================================================================
 // ManagementFeePercentageChanged — Managed pools
 // =============================================================================
 
-V2Pool.ManagementFeePercentageChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "ManagementFeePercentageChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -664,13 +735,16 @@ V2Pool.ManagementFeePercentageChanged.handler(async ({ event, context }) => {
     ...pool,
     managementFee: scaleDown(event.params.managementFeePercentage, 18),
   });
-});
+}
+);
 
 // =============================================================================
 // ManagementAumFeePercentageChanged — Managed pools
 // =============================================================================
 
-V2Pool.ManagementAumFeePercentageChanged.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "ManagementAumFeePercentageChanged" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -679,13 +753,16 @@ V2Pool.ManagementAumFeePercentageChanged.handler(async ({ event, context }) => {
     ...pool,
     managementAumFee: scaleDown(event.params.managementAumFeePercentage, 18),
   });
-});
+}
+);
 
 // =============================================================================
 // GradualSwapFeeUpdateScheduled — LBP / Managed pools
 // =============================================================================
 
-V2Pool.GradualSwapFeeUpdateScheduled.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "GradualSwapFeeUpdateScheduled" },
+  async ({ event, context }) => {
   const chainId = event.chainId;
   const poolId = makeChainId(chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
@@ -710,13 +787,16 @@ V2Pool.GradualSwapFeeUpdateScheduled.handler(async ({ event, context }) => {
     ...pool,
     swapFee: startSwapFee,
   });
-});
+}
+);
 
 // =============================================================================
 // ParametersSet — FX pools (alpha, beta, delta, epsilon, lambda)
 // =============================================================================
 
-V2Pool.ParametersSet.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "V2Pool", event: "ParametersSet" },
+  async ({ event, context }) => {
   const poolId = makeChainId(event.chainId, event.srcAddress);
   const pool = await context.V2Pool.get(poolId);
   if (!pool) return;
@@ -729,4 +809,5 @@ V2Pool.ParametersSet.handler(async ({ event, context }) => {
     epsilon: scaleDown(event.params.epsilon, 18),
     lambda: scaleDown(event.params.lambda, 18),
   });
-});
+}
+);
